@@ -1,3 +1,9 @@
+using TCAPArchive.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using TCAPArchive.App.Services;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,10 +13,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<TCAPContext>(options =>
+options.UseSqlServer(
+builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
+));
+
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
+
+builder.Services.AddScoped<ITCAPRepository, TCAPRepository>();
+
+
 
 var app = builder.Build();
 
