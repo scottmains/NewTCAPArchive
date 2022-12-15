@@ -1,0 +1,34 @@
+.top-nav-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:darkgrey;
+    height: 7.5vh;
+}
+
+    .top-nav-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+    .top-nav-menu li {
+        margin: 0 10px;
+    }
+
+    .top-nav-menu a {
+        text-decoration: none;
+        color: black;
+        font-size: 1.2rem;
+    }
+
+@media (max-width: 600px) {
+    .top-nav-menu {
+        flex-direction: column;
+    }
+
+        .top-nav-menu li {
+            margin: 10px 0;
+        }
+}
