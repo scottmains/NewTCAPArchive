@@ -1,6 +1,6 @@
 ﻿namespace TCAPArchive.App.Services
 {
-	public class ChatlogService
+	public class ChatlogDataService
 	{
 	}
 }

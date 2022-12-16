@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCAPArchive.App", "TCAPArch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCAPArchive.Shared", "TCAPArchive.Shared\TCAPArchive.Shared.csproj", "{A3D2ADC4-6159-4C11-90DF-DCC0264346B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCAPArchive.Api", "TCAPArchive.Api\TCAPArchive.Api.csproj", "{0AA0392E-4454-4F1B-9FA9-90733668A655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCAPArchive.Api", "TCAPArchive.Api\TCAPArchive.Api.csproj", "{0AA0392E-4454-4F1B-9FA9-90733668A655}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

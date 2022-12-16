@@ -12,8 +12,8 @@ namespace TCAPArchive.App.Services
 		{
 			_httpClient = httpClient;
 		}
-
-        public async Task<IEnumerable<Predator>> GetAllPredators()
+		#nullable disable
+		public async Task<IEnumerable<Predator>> GetAllPredators()
 		{
             return await JsonSerializer.DeserializeAsync<IEnumerable<Predator>>
                 (await _httpClient.GetStreamAsync($"api/predator"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });

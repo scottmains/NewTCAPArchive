@@ -5,8 +5,11 @@ namespace TCAPArchive.Api.Models
 {
     public interface ITCAPRepository
     {
-        void AddEntity(object model);
-        IEnumerable<ChatLine> GetAllChatLines();
+        Predator AddPredator(Predator predator);
+		Decoy AddDecoy(Decoy decoy);
+        ChatSession CreateChatSession (ChatSession chatSession);
+        bool CreateChatlog(List<ChatLine> chatlines);
+		IEnumerable<ChatLine> GetAllChatLines();
         IEnumerable<Predator> GetAllPredators();
         IEnumerable<Decoy> GetAllDecoys();
         Predator GetPredatorById(Guid Id);

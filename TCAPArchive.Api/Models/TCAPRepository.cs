@@ -13,55 +13,57 @@ namespace TCAPArchive.Api.Models
             _ctx = ctx;
             _logger = logger;
         }
-        public void AddEntity(object model)
-        {
+		public Predator AddPredator(Predator predator)
+		{
+			var addedEntity = _ctx.Predators.Add(predator);
+			_ctx.SaveChanges();
+			return addedEntity.Entity;
+		}
 
-            _ctx.Add(model);
-        }
-        public void DeletePredator(Guid Id)
+		public Decoy AddDecoy(Decoy decoy)
+		{
+			var addedEntity = _ctx.Decoys.Add(decoy);
+			_ctx.SaveChanges();
+			return addedEntity.Entity;
+		}
+
+        public ChatSession CreateChatSession (ChatSession chatSession)
         {
-            Predator predator = _ctx.Predators.Find(Id);
-            var chatId = _ctx.ChatLines.Where(x => x.PredatorId == Id).FirstOrDefault();
-            var getChat = _ctx.ChatLines.Where(x => x.ChatId == chatId.ChatId).ToList();
-            var decoyId = getChat.Where(x => x.DecoyId != null).FirstOrDefault();
-            Decoy decoy = _ctx.Decoys.Find(decoyId.DecoyId);
-            foreach (var chatLine in getChat)
+			var addedEntity = _ctx.ChatSessions.Add(chatSession);
+			_ctx.SaveChanges();
+			return addedEntity.Entity;
+		}
+
+        public bool CreateChatlog (List<ChatLine> chatlog)
+        {
+            foreach(var line in chatlog)
             {
-                _ctx.ChatLines.Remove(chatLine);
-            }
-            _ctx.Predators.Remove(predator);
-            _ctx.Decoys.Remove(decoy);
+				var addedEntity = _ctx.ChatLines.Add(line);
+			}
+
+            var success = _ctx.SaveChanges();
+
+            if (success == chatlog.Count())
+                return true;
+
+            return false;
+        }
+
+		public void DeletePredator(Guid Id)
+        {
+  
         }
         public void UpdatePredator(Predator predator)
         {
             var currentPredator = _ctx.Predators.FirstOrDefault(x => x.Id == predator.Id);
 
-            if (predator.FirstName != null)
+            if (predator != null)
             { 
                 currentPredator.FirstName = predator.FirstName;
-            }
-            if (predator.MiddleName != null)
-            {
-                currentPredator.MiddleName = predator.MiddleName;
-            }
-            if (predator.FirstName != null)
-            {
                 currentPredator.LastName = predator.LastName;
-            }
-            if (predator.Handle != null)
-            {
                 currentPredator.Handle = predator.Handle;
-            }
-            if (predator.Description != null)
-            {
                 currentPredator.Description = predator.Description;
-            }
-            if (predator.StingLocation != null)
-            {
                 currentPredator.StingLocation = predator.StingLocation;
-            }
-            if (predator.ImageData != null && predator.ImageData.Length > 0)
-            {
                 currentPredator.ImageData = predator.ImageData;
             }
             _ctx.SaveChanges();
@@ -74,7 +76,7 @@ namespace TCAPArchive.Api.Models
             {
                 _logger.LogInformation("GetAllChatLines was called");
                 return _ctx.ChatLines
-                    .OrderBy(c => c.DateCreated)
+                    .OrderBy(c => c.Position)
                     .ToList();
             }
             catch (Exception ex)
