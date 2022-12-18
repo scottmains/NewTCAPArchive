@@ -9,10 +9,7 @@
         public DateTime TimeStamp { get; set; }
         public int Position { get; set; }
         public int LikeCount { get; set; }
-
 		public ChatSession Chat { get; set; }
-
-
 
 	}
 }

@@ -15,17 +15,11 @@ namespace TCAPArchive.App.Pages
 
 		protected async override Task OnInitializedAsync()
 		{
-			Predator = await PredatorDataService.GetPredatorDetails(int.Parse(PredatorId));
-			if (Predator.Longitude.HasValue && Employee.Latitude.HasValue)
-			{
-				MapMarkers = new List<Marker>
-			{
-				new Marker{Description = $"{Employee.FirstName} {Employee.LastName}",  ShowPopup = false, X = Employee.Longitude.Value, Y = Employee.Latitude.Value}
-			};
+			
 			}
 		}
 
 
 
 	}
-}
+

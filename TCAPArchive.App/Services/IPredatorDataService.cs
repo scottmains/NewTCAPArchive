@@ -6,5 +6,6 @@ namespace TCAPArchive.App.Services
 	public interface IPredatorDataService 
 	{
         Task<IEnumerable<Predator>> GetAllPredators();
+        Task<Predator> AddPredator(Predator predator);
     }
 }

@@ -7,25 +7,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TCAPArchive.Api.Models;
 
-
 #nullable disable
 
-namespace TCAPArchive.Migrations
+namespace TCAPArchive.Api.Migrations
 {
     [DbContext(typeof(TCAPContext))]
-    [Migration("20221009113115_stingLocationAdded")]
-    partial class stingLocationAdded
+    [Migration("20221216190912_InitialCreate")]
+    partial class InitialCreate
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.ChatLine", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatLine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,17 +34,40 @@ namespace TCAPArchive.Migrations
                     b.Property<Guid>("ChatId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DecoyId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PredatorId")
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("ChatLines");
+                });
+
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DecoyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PredatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -53,24 +76,14 @@ namespace TCAPArchive.Migrations
 
                     b.HasIndex("PredatorId");
 
-                    b.ToTable("ChatLines");
+                    b.ToTable("ChatSessions");
                 });
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.Decoy", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.Decoy", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Handle")
                         .IsRequired()
@@ -84,27 +97,18 @@ namespace TCAPArchive.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StingLocation")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PredatorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.ToTable("Decoys");
                 });
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.Predator", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.Predator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -127,9 +131,6 @@ namespace TCAPArchive.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StingLocation")
@@ -140,29 +141,49 @@ namespace TCAPArchive.Migrations
                     b.ToTable("Predators");
                 });
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.ChatLine", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatLine", b =>
                 {
-                    b.HasOne("TCAPArchive.Data.Entities.Decoy", "Decoy")
-                        .WithMany("ChatLines")
-                        .HasForeignKey("DecoyId");
+                    b.HasOne("TCAPArchive.Shared.Domain.ChatSession", "Chat")
+                        .WithMany("Lines")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("TCAPArchive.Data.Entities.Predator", "predator")
-                        .WithMany("ChatLines")
-                        .HasForeignKey("PredatorId");
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatSession", b =>
+                {
+                    b.HasOne("TCAPArchive.Shared.Domain.Decoy", "Decoy")
+                        .WithMany("ChatSessions")
+                        .HasForeignKey("DecoyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TCAPArchive.Shared.Domain.Predator", "Predator")
+                        .WithMany("ChatSessions")
+                        .HasForeignKey("PredatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Decoy");
 
-                    b.Navigation("predator");
+                    b.Navigation("Predator");
                 });
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.Decoy", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatSession", b =>
                 {
-                    b.Navigation("ChatLines");
+                    b.Navigation("Lines");
                 });
 
-            modelBuilder.Entity("TCAPArchive.Data.Entities.Predator", b =>
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.Decoy", b =>
                 {
-                    b.Navigation("ChatLines");
+                    b.Navigation("ChatSessions");
+                });
+
+            modelBuilder.Entity("TCAPArchive.Shared.Domain.Predator", b =>
+                {
+                    b.Navigation("ChatSessions");
                 });
 #pragma warning restore 612, 618
         }
