@@ -1,0 +1,64 @@
+﻿
+@using TCAPArchive.Shared.Domain
+
+
+<EditForm Model="@Predator" OnValidSubmit="@HandleValidSubmit">
+
+
+    <div class="row mb-3">
+        <label for="firstName" class="col-form-label col-md-3">First Name: </label>
+        <div class="col-md-8">
+            <InputText id="firstName" @bind-Value="@Predator.FirstName" class="form-control col-md-8" placeholder="Enter first name"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Predator.FirstName)" />
+
+    </div>
+    <div class="row mb-3">
+        <label for="lastName" class="col-form-label col-md-3">Last Name: </label>
+        <div class="col-md-8">
+            <InputText id="firstName" @bind-Value="@Predator.LastName" class="form-control col-md-8" placeholder="Enter last name"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Predator.LastName)" />
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="description" class="col-form-label col-md-3">Description: </label>
+        <div class="col-md-8">
+            <InputText id="description" @bind-Value="@Predator.Description" class="form-control col-md-8" placeholder="Enter description"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Predator.Description)" />
+    </div>
+
+
+
+     <div class="row mb-3">
+        <label for="stinglocation" class="col-form-label col-md-3">Sting Location: </label>
+       <div class="col-md-8">
+            <InputText id="stinglocation" @bind-Value="@Predator.StingLocation" class="form-control col-md-8" placeholder="Enter Sting Location"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Predator.StingLocation)" />
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="handle" class="col-form-label col-md-3">Handle: </label>
+        <div class="col-md-8">
+            <InputText id="handle" @bind-Value="@Predator.Handle" class="form-control col-md-8" placeholder="Enter handle"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Predator.Handle)" />
+
+    </div>
+
+
+    <div class="row mb-3">
+        <label for="image" class="col-12 col-sm-3">Select image: </label>
+        <div class="col-md-8">
+            <InputFile OnChange="OnInputFileChange" />
+        </div>
+
+    </div>
+     <button type="submit" class="btn btn-primary me-1">Save Predator</button>
+</EditForm>
+
+<div class="alert @StatusClass">@Message</div>

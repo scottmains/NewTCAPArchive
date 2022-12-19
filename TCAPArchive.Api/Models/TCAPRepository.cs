@@ -38,7 +38,7 @@ namespace TCAPArchive.Api.Models
         {
             foreach(var line in chatlog)
             {
-				var addedEntity = _ctx.ChatLines.Add(line);
+				 _ctx.ChatLines.Add(line);
 			}
 
             var success = _ctx.SaveChanges();

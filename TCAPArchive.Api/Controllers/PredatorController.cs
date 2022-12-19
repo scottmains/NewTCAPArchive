@@ -22,11 +22,11 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetAllPredators());
         }
-
-		public ActionResult CreatePredator([FromBody] Predator predator)
+        [HttpPost]
+        public ActionResult CreatePredator([FromBody] Predator predator)
 		{
 
-			IFormFile predatorImage = Request.Form.Files[0];
+		
 			if (predator == null)
 				return BadRequest();
 
@@ -37,13 +37,6 @@ namespace TCAPArchive.Api.Controllers
 
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-
-			if (predatorImage != null)
-			{
-				MemoryStream msPredator = new MemoryStream();
-				predatorImage.CopyTo(msPredator);
-				predator.ImageData = msPredator.ToArray();
-			}
 
 			var createdPredator = _repository.AddPredator(predator);
 

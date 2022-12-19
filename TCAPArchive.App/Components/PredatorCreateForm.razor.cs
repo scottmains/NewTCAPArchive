@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Components.Forms;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
-namespace TCAPArchive.App.Pages
+namespace TCAPArchive.App.Components
 {
-    public partial class PredatorCreate
+    public partial class PredatorCreateForm
     {
         [Inject]
         public IPredatorDataService? PredatorDataService { get; set; }
@@ -30,12 +30,13 @@ namespace TCAPArchive.App.Pages
                 MemoryStream ms = new();
                 await stream.CopyToAsync(ms);
                 stream.Close();
+                Predator.ImageTitle = file.Name;
                 Predator.ImageData = ms.ToArray();
             }
+            Predator.Id = Guid.NewGuid();
+            var addedPredator = await PredatorDataService.AddPredator(Predator);
 
-            var addedEmployee = await PredatorDataService.AddPredator(Predator);
-
-            if (addedEmployee != null)
+            if (addedPredator != null)
             {
                 StatusClass = "alert-success";
                 Message = "New predator added successfully.";
@@ -54,8 +55,8 @@ namespace TCAPArchive.App.Pages
         private void OnInputFileChange(InputFileChangeEventArgs e)
         {
             selectedFile = e.File;
-            StateHasChanged();
-        }
+			StateHasChanged();
+		}
 
         protected async Task HandleInvalidSubmit()
         {

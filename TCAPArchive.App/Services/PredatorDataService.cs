@@ -25,7 +25,7 @@ namespace TCAPArchive.App.Services
             var predatorJson =
                 new StringContent(JsonSerializer.Serialize(predator), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("api/predators", predatorJson);
+            var response = await _httpClient.PostAsync("api/predator", predatorJson);
 
             if (response.IsSuccessStatusCode)
             {

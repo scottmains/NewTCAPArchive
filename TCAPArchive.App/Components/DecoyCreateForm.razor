@@ -1,0 +1,13 @@
+﻿
+
+
+
+<EditForm Model="@Decoy" OnValidSubmit="@HandleValidSubmit">
+    <div class="row mb-3">
+        <label for="Handle" class="col-form-label col-md-3">Handle: </label>
+        <div class="col-md-8">
+            <InputText id="firstName" @bind-Value="@Decoy.Handle" class="form-control col-md-8" placeholder="Enter first name"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Decoy.Handle)" />
+    </div>
+</EditForm>
