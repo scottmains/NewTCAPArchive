@@ -21,4 +21,10 @@ builder.Services
 builder.Services.AddHttpClient<IPredatorDataService, PredatorDataService>(client =>
 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
+builder.Services.AddHttpClient<IDecoyDataService, DecoyDataService>(client =>
+client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
+builder.Services.AddHttpClient<IChatlogDataService, ChatlogDataService>(client =>
+client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
 await builder.Build().RunAsync();

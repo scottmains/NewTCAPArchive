@@ -25,7 +25,7 @@ namespace TCAPArchive.App.Services
             var decoyJson =
                 new StringContent(JsonSerializer.Serialize(decoy), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("api/decoys", decoyJson);
+            var response = await _httpClient.PostAsync("api/decoy", decoyJson);
 
             if (response.IsSuccessStatusCode)
             {

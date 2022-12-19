@@ -1,6 +1,11 @@
-﻿namespace TCAPArchive.App.Services
+﻿using TCAPArchive.Shared.Domain;
+
+namespace TCAPArchive.App.Services
 {
-	public class IChatlogDataService
+	public interface IChatlogDataService
 	{
-	}
+
+        Task<ChatSession> AddChatSession(ChatSession chatsession);
+
+    }
 }

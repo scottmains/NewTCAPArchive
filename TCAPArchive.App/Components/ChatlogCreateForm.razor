@@ -1,5 +1,32 @@
-﻿<h3>ChatlogCreateForm</h3>
+﻿
 
-@code {
+<EditForm Model="@chatsession" OnValidSubmit="@HandleValidSubmit">
+<div class="row mb-3">
+    <label for="predator" class="col-form-label col-md-3">Predator: </label>
+    <div class="col-md-8">
+        <InputSelect id="predator-list" class="form-select col-md-8" @bind-Value="@chatsession.PredatorId">
+            @foreach (var predator in predators)
+            {
+                <option value="@predator.Id">@predator.Handle</option>
+            }
+        </InputSelect>
+    </div>
+</div>
 
-}
+<div class="row mb-3">
+    <label for="decoy" class="col-form-label col-md-3">Decoy: </label>
+    <div class="col-md-8">
+        <InputSelect id="decoy-list" class="form-select col-md-8" @bind-Value="@chatsession.DecoyId">
+            @foreach (var decoy in decoys)
+            {
+                <option value="@decoy.Id">@decoy.Handle</option>
+            }
+        </InputSelect>
+    </div>
+
+    <InputTextArea id="chatlog" class="form-select col-md-8" @bind-Value="@Chatlog">
+    </InputTextArea>
+
+    <button type="submit" class="btn btn-primary me-1">Save Chatlog</button>
+</div>
+</EditForm>

@@ -29,6 +29,11 @@ namespace TCAPArchive.Api.Models
 
         public ChatSession CreateChatSession (ChatSession chatSession)
         {
+            foreach(var chatline in chatSession.Lines)
+            {
+                _ctx.ChatLines.Add(chatline);
+            }
+
 			var addedEntity = _ctx.ChatSessions.Add(chatSession);
 			_ctx.SaveChanges();
 			return addedEntity.Entity;

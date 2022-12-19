@@ -18,9 +18,15 @@ namespace TCAPArchive.Api.Controllers
 			_repository = repository;
 		}
 
+        [HttpGet]
+        public IActionResult GetDecoys()
+        {
+            return Ok(_repository.GetAllDecoys());
+        }
+        [HttpPost]
 		public ActionResult CreateDecoy([FromBody] Decoy decoy)
 		{
-			IFormFile decoyImage = Request.Form.Files[0];
+			
 			if (decoy == null)
 				return BadRequest();
 
@@ -31,13 +37,6 @@ namespace TCAPArchive.Api.Controllers
 
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-
-			if (decoyImage != null)
-			{
-				MemoryStream msDecoy = new MemoryStream();
-				decoyImage.CopyTo(msDecoy);
-				decoy.ImageData = msDecoy.ToArray();
-			}
 
 			var createdDecoy = _repository.AddDecoy(decoy);
 

@@ -29,21 +29,22 @@ namespace TCAPArchive.App.Components
                 MemoryStream ms = new();
                 await stream.CopyToAsync(ms);
                 stream.Close();
+                Decoy.ImageTitle = file.Name;
                 Decoy.ImageData = ms.ToArray();
             }
+            Decoy.Id = Guid.NewGuid();
+            var addedDecoy = await DecoyDataService.AddDecoy(Decoy);
 
-            var addedEmployee = await DecoyDataService.AddDecoy(Decoy);
-
-            if (addedEmployee != null)
+            if (addedDecoy != null)
             {
                 StatusClass = "alert-success";
-                Message = "New predator added successfully.";
+                Message = "New decoy added successfully.";
                 Saved = true;
             }
             else
             {
                 StatusClass = "alert-danger";
-                Message = "Something went wrong adding the new predator. Please try again.";
+                Message = "Something went wrong adding the new decoy. Please try again.";
                 Saved = false;
             }
         }
