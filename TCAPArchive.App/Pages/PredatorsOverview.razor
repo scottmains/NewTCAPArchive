@@ -3,8 +3,14 @@
 <h2> Predators Overview </h2>
 
 <div>
-    @foreach(var predator in Predators)
-    {
-        <p>@predator.FirstName @predator.LastName</p>
-    }
+    <CardDeck>
+        @if (Predators != null)
+        {
+            @foreach(var predator in Predators)
+            {
+        
+        <PredatorCard predator="predator"></PredatorCard>
+            }
+        }
+    </CardDeck>
 </div>

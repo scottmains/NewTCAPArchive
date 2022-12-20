@@ -22,11 +22,16 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetAllPredators());
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetPredatorById(Guid id)
+        {
+            return Ok(_repository.GetPredatorById(id));
+        }
         [HttpPost]
         public ActionResult CreatePredator([FromBody] Predator predator)
 		{
 
-		
 			if (predator == null)
 				return BadRequest();
 

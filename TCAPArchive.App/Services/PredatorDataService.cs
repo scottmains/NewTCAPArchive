@@ -20,6 +20,12 @@ namespace TCAPArchive.App.Services
                 (await _httpClient.GetStreamAsync($"api/predator"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<Predator> GetPredatorById(Guid predatorId)
+        {
+            return await JsonSerializer.DeserializeAsync<Predator>
+                (await _httpClient.GetStreamAsync($"api/predator/{predatorId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
         public async Task<Predator> AddPredator(Predator predator)
         {
             var predatorJson =

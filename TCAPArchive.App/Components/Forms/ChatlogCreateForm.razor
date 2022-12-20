@@ -1,0 +1,29 @@
+﻿
+
+<EditForm Model="@chatsession" OnValidSubmit="@HandleValidSubmit">
+<div class="col-md-6 p-3">
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Filtering</RadzenText>
+            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@chatsession.PredatorId Data=@predators TextProperty="PName" ValueProperty="DecoyID"
+                            Style="height:200px" Class="w-100" />
+        </RadzenCard>
+    </div>
+
+    <div class="col-md-6 p-3">
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Filtering</RadzenText>
+            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@chatsession.DecoyId Data=@decoys TextProperty="DecoyName" ValueProperty="DecoyID"
+                            Style="height:200px" Class="w-100" />
+        </RadzenCard>
+    </div>
+
+        <div class="col-md-6 col-lg-4 p-3">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Paste Chatlog below:</RadzenText>
+                <RadzenTextArea Placeholder="Enter here..." @bind-Value=@Chatlog Class="w-100" />
+            </RadzenCard>
+        </div>
+
+    <button type="submit" class="btn btn-primary me-1">Save Chatlog</button>
+
+</EditForm>

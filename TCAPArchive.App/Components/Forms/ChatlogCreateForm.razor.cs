@@ -9,7 +9,7 @@ using TCAPArchive.Shared.Domain;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Match = System.Text.RegularExpressions.Match;
 
-namespace TCAPArchive.App.Components
+namespace TCAPArchive.App.Components.Forms
 {
     public partial class ChatlogCreateForm
     {
@@ -20,6 +20,7 @@ namespace TCAPArchive.App.Components
         public IDecoyDataService? DecoyDataService { get; set; }
         [Inject]
         public IChatlogDataService? ChatlogDataService { get; set; }
+
         public Decoy SelectedDecoy { get; set; } = new Decoy();
         public Predator SelectedPredator { get; set; } = new Predator();
         public List<Predator> predators { get; set; } = new List<Predator>();
@@ -50,7 +51,7 @@ namespace TCAPArchive.App.Components
                 ChatLines = addLogWithFormat1(matches, ChatLines);
             }
 
-           chatsession.Predator = PredatorDataService.GetById 
+            chatsession.Predator = PredatorDataService.GetPredatorById(SelectedPredator.Id).Result;
 
             var addedChatlog = await ChatlogDataService.AddChatSession(chatsession);
 
