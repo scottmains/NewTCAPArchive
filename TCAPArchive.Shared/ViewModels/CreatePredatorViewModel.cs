@@ -18,5 +18,4 @@ namespace TCAPArchive.Shared.ViewModels
     }
     
 
-    }
 }

@@ -24,9 +24,7 @@ namespace TCAPArchive.Api.Models
         {
             // define the relationships between the entity classes
             modelBuilder.Entity<ChatSession>()
-                .HasOne(s => s.Predator)
-                .WithMany(p => p.ChatSessions)
-                .HasForeignKey(s => s.PredatorId);
+                .HasOne(s => s.Predator);
             modelBuilder.Entity<ChatSession>()
                 .HasOne(s => s.Decoy);
             modelBuilder.Entity<ChatLine>()

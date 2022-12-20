@@ -1,0 +1,31 @@
+﻿@page "/admin"
+@using TCAPArchive.Shared.Domain;
+@inject DialogService DialogService
+
+@layout AdminLayout
+
+<RadzenDataList WrapItems="true" AllowPaging="true" Data="@Predators" TItem="Predator" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left">
+    <Template Context="predator">
+
+        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+            <div class="container">
+                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
+                    <div class="col-lg-3 p-3">
+                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(predator.FirstName)</RadzenText>
+                        </div>
+                        <div class="col-lg-7 p-3">
+                            <div class="row d-flex">
+                                <div class="col-md-6 col-lg-2">
+                              
+                                </div>
+                        
+                            </div>
+                        </div>
+                        <div class="col-lg-2 p-3">
+                            <RadzenButton Text=@($"Edit {predator.FirstName}") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenPredatorEdit(predator.Id, predator.FirstName)" />
+                        </div>
+                    </div>
+                </div>
+            </RadzenCard>
+    </Template>
+</RadzenDataList>

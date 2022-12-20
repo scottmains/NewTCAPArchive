@@ -4,9 +4,9 @@ using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
-namespace TCAPArchive.App.Components.Forms
+namespace TCAPArchive.App.Components.Admin
 {
-    public partial class PredatorCreateForm
+    public partial class PredatorCreate
     {
         [Inject]
         public IPredatorDataService? PredatorDataService { get; set; }
@@ -15,7 +15,7 @@ namespace TCAPArchive.App.Components.Forms
         [Inject]
         public NavigationManager NavigationManager { get; set; }
         public Predator predator { get; set; } = new Predator();
-        public CreatePredatorViewModel createPredator { get; set; }
+        public CreatePredatorViewModel createPredator { get; set; } = new CreatePredatorViewModel();
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
@@ -27,7 +27,7 @@ namespace TCAPArchive.App.Components.Forms
             Saved = false;
             var addPredator = new Predator
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 FirstName = createPredator.FirstName,
                 LastName = createPredator.LastName,
                 Handle = createPredator.Handle,
@@ -37,7 +37,7 @@ namespace TCAPArchive.App.Components.Forms
 
             var addDecoy = new Decoy
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 PredatorId = addPredator.Id,
                 Handle = createPredator.DecoyHandle
             };
@@ -55,7 +55,7 @@ namespace TCAPArchive.App.Components.Forms
 
             if (selectedFileDecoy != null)
             {
-                var file = selectedFilePredator;
+                var file = selectedFileDecoy;
                 Stream stream = file.OpenReadStream();
                 MemoryStream ms = new();
                 await stream.CopyToAsync(ms);

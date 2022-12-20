@@ -2,8 +2,8 @@
 
 <h2> Predators Overview </h2>
 
-<div>
-    <CardDeck>
+<div class="d-flex row">
+ 
         @if (Predators != null)
         {
             @foreach(var predator in Predators)
@@ -12,5 +12,4 @@
         <PredatorCard predator="predator"></PredatorCard>
             }
         }
-    </CardDeck>
 </div>

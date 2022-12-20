@@ -12,6 +12,6 @@ namespace TCAPArchive.Shared.Domain
         public string Handle { get; set; }
         public string ImageTitle { get; set; }
         public byte[] ImageData { get; set; }
-        public List<ChatSession>? ChatSessions { get; set; }
+     
     }
 }

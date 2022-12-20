@@ -1,0 +1,57 @@
+﻿@page "/dialogcard/{predatorId}"
+@inject Radzen.DialogService dialogService
+
+
+@if(predator != null)
+{
+<EditForm Model="@predator" OnValidSubmit="@HandleValidSubmit">
+    <div class="row mb-3">
+        <label for="firstName" class="col-form-label col-md-3">First Name: </label>
+        <div class="col-md-8">
+            <InputText id="firstName" @bind-Value="@predator.FirstName" class="form-control col-md-8"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.FirstName)" />
+
+    </div>
+    <div class="row mb-3">
+        <label for="lastName" class="col-form-label col-md-3">Last Name: </label>
+        <div class="col-md-8">
+            <InputText id="firstName" @bind-Value="@predator.LastName" class="form-control col-md-8"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.LastName)" />
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="description" class="col-form-label col-md-3">Description: </label>
+        <div class="col-md-8">
+            <InputText id="description" @bind-Value="@predator.Description" class="form-control col-md-8"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.Description)" />
+    </div>
+
+    <div class="row mb-3">
+        <label for="stinglocation" class="col-form-label col-md-3">Sting Location: </label>
+        <div class="col-md-8">
+            <InputText id="stinglocation" @bind-Value="@predator.StingLocation" class="form-control col-md-8"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.StingLocation)" />
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="handle" class="col-form-label col-md-3">Handle: </label>
+        <div class="col-md-8">
+            <InputText id="handle" @bind-Value="@predator.Handle" class="form-control col-md-8"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.Handle)" />
+
+    </div>
+    <div class="row mb-3">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Upload images only</RadzenText>
+             <InputFile OnChange="OnInputFileChangePredator" />
+    </div>
+
+     <button type="submit" class="btn btn-primary me-1">Update predator</button>
+</EditForm>
+}

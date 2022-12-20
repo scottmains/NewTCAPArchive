@@ -1,4 +1,4 @@
-﻿using Blazorise;
+﻿
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.Metrics;
 using System.Globalization;
@@ -9,9 +9,9 @@ using TCAPArchive.Shared.Domain;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Match = System.Text.RegularExpressions.Match;
 
-namespace TCAPArchive.App.Components.Forms
+namespace TCAPArchive.App.Components.Admin
 {
-    public partial class ChatlogCreateForm
+    public partial class ChatlogCreate
     {
         [Inject]
         public IPredatorDataService? PredatorDataService { get; set; }
@@ -51,7 +51,7 @@ namespace TCAPArchive.App.Components.Forms
                 ChatLines = addLogWithFormat1(matches, ChatLines);
             }
 
-            chatsession.Predator = PredatorDataService.GetPredatorById(SelectedPredator.Id).Result;
+          //  chatsession.Predator = PredatorDataService.GetPredatorById(SelectedPredator.Id).Result;
 
             var addedChatlog = await ChatlogDataService.AddChatSession(chatsession);
 
