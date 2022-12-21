@@ -12,8 +12,8 @@ using TCAPArchive.Api.Models;
 namespace TCAPArchive.Api.Migrations
 {
     [DbContext(typeof(TCAPContext))]
-    [Migration("20221220182715_RemovedChatSessionsFromPredator")]
-    partial class RemovedChatSessionsFromPredator
+    [Migration("20221221202431_InitialCreate3")]
+    partial class InitialCreate3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace TCAPArchive.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChatId")
+                    b.Property<Guid>("ChatSessionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("LikeCount")
@@ -56,7 +56,7 @@ namespace TCAPArchive.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("ChatSessionId");
 
                     b.ToTable("ChatLines");
                 });
@@ -77,10 +77,6 @@ namespace TCAPArchive.Api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DecoyId");
-
-                    b.HasIndex("PredatorId");
 
                     b.ToTable("ChatSessions");
                 });
@@ -103,7 +99,7 @@ namespace TCAPArchive.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PredatorId")
+                    b.Property<Guid?>("PredatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -149,37 +145,18 @@ namespace TCAPArchive.Api.Migrations
 
             modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatLine", b =>
                 {
-                    b.HasOne("TCAPArchive.Shared.Domain.ChatSession", "Chat")
-                        .WithMany("Lines")
-                        .HasForeignKey("ChatId")
+                    b.HasOne("TCAPArchive.Shared.Domain.ChatSession", "ChatSession")
+                        .WithMany("ChatLines")
+                        .HasForeignKey("ChatSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Chat");
+                    b.Navigation("ChatSession");
                 });
 
             modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatSession", b =>
                 {
-                    b.HasOne("TCAPArchive.Shared.Domain.Decoy", "Decoy")
-                        .WithMany()
-                        .HasForeignKey("DecoyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TCAPArchive.Shared.Domain.Predator", "Predator")
-                        .WithMany()
-                        .HasForeignKey("PredatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Decoy");
-
-                    b.Navigation("Predator");
-                });
-
-            modelBuilder.Entity("TCAPArchive.Shared.Domain.ChatSession", b =>
-                {
-                    b.Navigation("Lines");
+                    b.Navigation("ChatLines");
                 });
 #pragma warning restore 612, 618
         }

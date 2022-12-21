@@ -15,6 +15,8 @@ namespace TCAPArchive.App.Components.Admin
         public Guid decoyId { get; set; }
         public Decoy decoy { get; set; }
 
+        public string Chatlog { get; set; }
+
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;

@@ -8,12 +8,13 @@ namespace TCAPArchive.Api.Models
         Predator AddPredator(Predator predator);
 		Decoy AddDecoy(Decoy decoy);
         ChatSession CreateChatSession (ChatSession chatSession);
-		IEnumerable<ChatLine> GetAllChatLines();
+        int AddChatLines(List<ChatLine> chatlines);
         IEnumerable<Predator> GetAllPredators();
         IEnumerable<ChatSession> GetAllChatSessions();
         IEnumerable<Decoy> GetAllDecoys();
         Predator GetPredatorById(Guid Id);
         Decoy GetDecoyById(Guid Id);
+        ChatSession GetChatSessionById(Guid Id);
         void UpdatePredator(Predator predator);
         void UpdateDecoy(Decoy decoy);
         void DeletePredator(Guid Id);

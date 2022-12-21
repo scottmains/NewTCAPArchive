@@ -17,18 +17,21 @@
             <div class="container">
                 <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
                     <div class="col-lg-3 p-3">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(chatsession)</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(chatsession.ChatSession.Name)</RadzenText>
                             </div>
                             <div class="col-lg-7 p-3">
                                 <div class="row d-flex">
                                     <div class="col-md-6 col-lg-2">
-
+                                        @chatsession.predator.FirstName
                                     </div>
 
                                 </div>
                             </div>
                             <div class="col-lg-2 p-3">
                                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Click="@((args) => DeleteButtonClick(chatsession.ChatSession.Id))" @onclick:stopPropagation="true"></RadzenButton>
+                            </div>
+                            <div class="col-lg-2 p-3">
+                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add" Text="Add" Size="ButtonSize.Medium" Click="@((args) => AddChatlogClick(chatsession.ChatSession.Id))" @onclick:stopPropagation="true"></RadzenButton>
                             </div>
                         </div>
                     </div>

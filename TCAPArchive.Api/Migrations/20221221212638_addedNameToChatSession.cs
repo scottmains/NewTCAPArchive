@@ -5,25 +5,24 @@
 namespace TCAPArchive.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedSenderHandle : Migration
+    public partial class addedNameToChatSession : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "SenderHandle",
-                table: "ChatLines",
+                name: "Name",
+                table: "ChatSessions",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "SenderHandle",
-                table: "ChatLines");
+                name: "Name",
+                table: "ChatSessions");
         }
     }
 }

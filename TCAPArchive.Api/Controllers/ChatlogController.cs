@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using TCAPArchive.Api.Models;
+using TCAPArchive.App.Components.Admin;
 using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.Api.Controllers
@@ -24,8 +25,14 @@ namespace TCAPArchive.Api.Controllers
             return Ok(_repository.GetAllChatSessions());
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetChatSessionById(Guid id)
+        {
+            return Ok(_repository.GetChatSessionById(id));
+        }
+
         [HttpPost]
-		public ActionResult CreateChatlog([FromBody]ChatSession chatsession)
+		public ActionResult CreateChatSession([FromBody]ChatSession chatsession)
 		{
             if (chatsession == null)
                 return BadRequest();
@@ -43,7 +50,20 @@ namespace TCAPArchive.Api.Controllers
             return Created("chatlog", createdChatSession);
         }
 
+        [HttpPost("addchatlines")]
+        public ActionResult CreateChatLines([FromBody] List<ChatLine> chatlines)
+        {
+            if (chatlines == null)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var chatLines = _repository.AddChatLines(chatlines);
+
+            return Created("chatlog", chatLines);
+        }
 
 
-	}
+    }
 }

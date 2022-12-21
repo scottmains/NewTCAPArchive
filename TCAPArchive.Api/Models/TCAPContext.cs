@@ -22,15 +22,14 @@ namespace TCAPArchive.Api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // define the relationships between the entity classes
-            modelBuilder.Entity<ChatSession>()
-                .HasOne(s => s.Predator);
-            modelBuilder.Entity<ChatSession>()
-                .HasOne(s => s.Decoy);
+           
             modelBuilder.Entity<ChatLine>()
-                .HasOne(l => l.Chat)
-                .WithMany(s => s.Lines)
-                .HasForeignKey(l => l.ChatId);
+            .HasOne(x => x.ChatSession)
+            .WithMany(x => x.ChatLines)
+            .HasForeignKey(x => x.ChatSessionId);
+
+       
+
         }
 
     }

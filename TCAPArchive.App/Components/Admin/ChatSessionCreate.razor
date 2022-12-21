@@ -2,6 +2,15 @@
 
 <EditForm Model="@chatsession" OnValidSubmit="@HandleValidSubmit">
 <div class="col-md-6 p-3">
+
+        <div class="row mb-3">
+            <label for="handle" class="col-form-label col-md-3">Handle: </label>
+            <div class="col-md-8">
+                <InputText id="handle" @bind-Value="@chatsession.Name" class="form-control col-md-8" placeholder="Enter handle"></InputText>
+            </div>
+            <ValidationMessage class="offset-md-3 col-md-8" For="@(() => chatsession.Name)" />
+        </div>
+
         <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Choose Predator</RadzenText>
             <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@predators @bind-Value=@chatsession.PredatorId
@@ -17,13 +26,8 @@
         </RadzenCard>
     </div>
 
-        <div class="col-md-6 col-lg-4 p-3">
-            <RadzenCard>
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Paste Chatlog below:</RadzenText>
-                <RadzenTextArea Placeholder="Enter here..." @bind-Value=@Chatlog Class="w-100" />
-            </RadzenCard>
-        </div>
+  
 
-    <button type="submit" class="btn btn-primary me-1">Save Chatlog</button>
+    <button type="submit" class="btn btn-primary me-1">Save Chat Session</button>
 
 </EditForm>

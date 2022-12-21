@@ -18,7 +18,7 @@ namespace TCAPArchive.App.Pages.Admin
         public List<ChatSession> ChatSessions { get; set; }
       
 
-        public List<AdminChatSessionViewModel> adminChatSessions { get; set; } 
+        public List<AdminChatSessionViewModel> adminChatSessions { get; set; } = new List<AdminChatSessionViewModel>();
 
 
         protected override async Task OnInitializedAsync()
@@ -27,7 +27,6 @@ namespace TCAPArchive.App.Pages.Admin
 
             foreach(var chatSession in ChatSessions)
             {
-
                Decoy decoy = (await DecoyDataService.GetDecoyById(chatSession.DecoyId));
                Predator predator = (await PredatorDataService.GetPredatorById(chatSession.PredatorId));
 
@@ -41,13 +40,17 @@ namespace TCAPArchive.App.Pages.Admin
                 adminChatSessions.Add(viewModel);
             }
         }
-
-
-
         public async Task OpenChatSessionCreate()
         {
-            await DialogService.OpenAsync<ChatlogCreate>($" Create ",
+            await DialogService.OpenAsync<ChatSessionCreate>($" Create ",
                    new Dictionary<string, object>() { },
+                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+        }
+
+        public async Task AddChatlogClick(Guid chatSessionId)
+        {
+            await DialogService.OpenAsync<ChatLinesCreate>($" Add Chatlog ",
+                   new Dictionary<string, object>() { { "chatSessionId", chatSessionId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
         }
 

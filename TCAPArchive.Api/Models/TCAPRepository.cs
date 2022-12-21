@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using TCAPArchive.App.Components.Admin;
 using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.Api.Models
@@ -29,20 +30,24 @@ namespace TCAPArchive.Api.Models
 
         public ChatSession CreateChatSession (ChatSession chatSession)
         {
-            if(chatSession.Lines != null)
-            foreach(var chatline in chatSession.Lines)
-            {
-                _ctx.ChatLines.Add(chatline);
-            }
-
 			var addedEntity = _ctx.ChatSessions.Add(chatSession);
 			_ctx.SaveChanges();
 			return addedEntity.Entity;
-		}
+        }
 
-     
+        public int AddChatLines(List<ChatLine> chatlines)
+        {
+            if (chatlines != null)
+                foreach (var chatline in chatlines)
+                {
+                    _ctx.ChatLines.Add(chatline);
+                }
+            var success = _ctx.SaveChanges();
 
-		public void DeletePredator(Guid Id)
+            return success;
+        }
+
+    public void DeletePredator(Guid Id)
         {
             var foundPredator = _ctx.Predators.FirstOrDefault(e => e.Id == Id);
             if (foundPredator == null) return;
@@ -93,21 +98,6 @@ namespace TCAPArchive.Api.Models
             _ctx.SaveChanges();
         }
 
-        public IEnumerable<ChatLine> GetAllChatLines()
-        {
-            try
-            {
-                _logger.LogInformation("GetAllChatLines was called");
-                return _ctx.ChatLines
-                    .OrderBy(c => c.Position)
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get queries: {ex}");
-                return null;
-            }
-        }
 
         public IEnumerable<Predator> GetAllPredators()
         {
@@ -166,8 +156,13 @@ namespace TCAPArchive.Api.Models
         {
             return _ctx.Decoys.Find(Id);
         }
+        public ChatSession GetChatSessionById(Guid Id)
+        {
+            return _ctx.ChatSessions.Find(Id);
+        }
 
-     
+
+
         public bool SaveAll()
         {
             return _ctx.SaveChanges() > 0;
