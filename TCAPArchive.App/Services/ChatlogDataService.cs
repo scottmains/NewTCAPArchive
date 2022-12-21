@@ -13,6 +13,11 @@ namespace TCAPArchive.App.Services
         {
             _httpClient = httpClient;
         }
+        public async Task<IEnumerable<ChatSession>> GetAllChatSessions()
+        {
+            return await JsonSerializer.DeserializeAsync<IEnumerable<ChatSession>>
+                (await _httpClient.GetStreamAsync($"api/chatlog"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
 
 
         public async Task<ChatSession> AddChatSession(ChatSession chatsession)

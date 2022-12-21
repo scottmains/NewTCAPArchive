@@ -41,5 +41,17 @@ namespace TCAPArchive.App.Services
             return null;
         }
 
+        public async Task UpdatePredator(Predator predator)
+        {
+            var predatorJson =
+                new StringContent(JsonSerializer.Serialize(predator), Encoding.UTF8, "application/json");
+
+            await _httpClient.PutAsync("api/predator", predatorJson);
+        }
+
+        public async Task DeletePredator(Guid predatorId)
+        {
+            await _httpClient.DeleteAsync($"api/predator/{predatorId}");
+        }
     }
 }

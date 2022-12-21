@@ -6,44 +6,44 @@ using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.App.Pages.Admin
 {
-    public partial class AdminPredators
+    public partial class AdminDecoys
     {
         [Inject]
-        public IPredatorDataService? PredatorDataService { get; set; }
-        public List<Predator> Predators { get; set; }
-        public Predator predator { get; set; }
+        public IDecoyDataService? DecoyDataService { get; set; }
+        public List<Decoy> Decoys { get; set; }
+        public Decoy decoy { get; set; }
 
 
         protected override async Task OnInitializedAsync()
         {
-            Predators = (await PredatorDataService.GetAllPredators()).ToList();
+            Decoys = (await DecoyDataService.GetAllDecoys()).ToList();
         }
 
-        public async Task OpenPredatorEdit(Guid predatorId, string predatorName)
+        public async Task OpenDecoyEdit(Guid decoyId, string decoyHandle)
         {
-            await DialogService.OpenAsync<PredatorEdit>($" Edit {predatorName}",
-                   new Dictionary<string, object>() { { "predatorId", predatorId } },
+            await DialogService.OpenAsync<DecoyEdit>($" Edit {decoyHandle}",
+                   new Dictionary<string, object>() { { "decoyId", decoyId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
         }
 
-        public async Task OpenPredatorCreate()
+        public async Task OpenDecoyCreate()
         {
-            await DialogService.OpenAsync<PredatorCreate>($" Create ",
+            await DialogService.OpenAsync<DecoyCreate>($" Create ",
                    new Dictionary<string, object>() { },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
         }
 
-        public async Task DeleteButtonClick(Guid predatorId)
+        public async Task DeleteButtonClick(Guid decoyId)
         {
             // Ask for confirmation:
             var confirmResult = await DialogService.Confirm(
-                "Yes", "No");
+                "Are you sure?", "Delete decoy");
 
             if (confirmResult.HasValue && confirmResult.Value)
             {
                 try
                 {
-                    await PredatorDataService.DeletePredator(predatorId);
+                    await DecoyDataService.DeleteDecoy(decoyId);
                 }
                 catch (Exception exception)
                 {
@@ -53,6 +53,8 @@ namespace TCAPArchive.App.Pages.Admin
                 }
 
             }
+
+            StateHasChanged();
         }
 
 

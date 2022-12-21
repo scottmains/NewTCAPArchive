@@ -6,60 +6,67 @@ using TCAPArchive.Shared.ViewModels;
 
 namespace TCAPArchive.App.Components.Admin
 {
-    public partial class PredatorCreate
+    public partial class DecoyCreate
     {
-        [Inject]
-        public IPredatorDataService? PredatorDataService { get; set; }
         [Inject]
         public IDecoyDataService? DecoyDataService { get; set; }
         [Inject]
+        public IPredatorDataService? PredatorDataService { get; set; }
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
-        public Predator predator { get; set; } 
+        public Decoy decoy { get; set; } = new Decoy();
+
+        public List<Predator> predators { get; set; }
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
 
 
+        protected override async Task OnInitializedAsync()
+        {
+            predators = (await PredatorDataService.GetAllPredators()).ToList();
+        }
+
         protected async Task HandleValidSubmit()
         {
             Saved = false;
-      
-            if (selectedFilePredator != null)
+
+            if (selectedFileDecoy != null)
             {
-                var file = selectedFilePredator;
+                var file = selectedFileDecoy;
                 Stream stream = file.OpenReadStream();
                 MemoryStream ms = new();
                 await stream.CopyToAsync(ms);
                 stream.Close();
-                predator.ImageTitle = file.Name;
-                predator.ImageData = ms.ToArray();
+                decoy.ImageTitle = file.Name;
+                decoy.ImageData = ms.ToArray();
             }
 
-            var addedPredator = await PredatorDataService.AddPredator(predator);
+            var addedDecoy = await DecoyDataService.AddDecoy(decoy);
 
-            if (addedPredator != null)
+            if (addedDecoy != null)
             {
                 StatusClass = "alert-success";
-                Message = "New predator added successfully.";
+                Message = "New decoy added successfully.";
                 Saved = true;
             }
             else
             {
                 StatusClass = "alert-danger";
-                Message = "Something went wrong adding the new predator. Please try again.";
+                Message = "Something went wrong adding the new decoy. Please try again.";
                 Saved = false;
             }
         }
 
-        private IBrowserFile selectedFilePredator;
-    
+        private IBrowserFile selectedFileDecoy;
 
-        private void OnInputFileChangePredator(InputFileChangeEventArgs e)
+
+        private void OnInputFileChangeDecoy(InputFileChangeEventArgs e)
         {
-            selectedFilePredator = e.File;
-			StateHasChanged();
-		}
+            selectedFileDecoy = e.File;
+            StateHasChanged();
+        }
 
         protected async Task HandleInvalidSubmit()
         {
@@ -69,7 +76,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected void NavigateToOverview()
         {
-            NavigationManager.NavigateTo("/predators");
+            NavigationManager.NavigateTo("/decoys");
         }
 
     }

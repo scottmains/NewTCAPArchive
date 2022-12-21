@@ -4,6 +4,7 @@ using TCAPArchive.App;
 using TCAPArchive.App.Services;
 using Radzen;
 
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -23,5 +24,11 @@ client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
 builder.Services.AddHttpClient<IChatlogDataService, ChatlogDataService>(client =>
 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
+builder.Services.AddOidcAuthentication(options =>
+{
+    builder.Configuration.Bind("Auth0", options.ProviderOptions);
+    options.ProviderOptions.ResponseType = "code";
+});
 
 await builder.Build().RunAsync();

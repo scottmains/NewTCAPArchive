@@ -23,6 +23,13 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetAllDecoys());
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetDecoyById(Guid id)
+        {
+            return Ok(_repository.GetDecoyById(id));
+        }
+
         [HttpPost]
 		public ActionResult CreateDecoy([FromBody] Decoy decoy)
 		{
@@ -43,5 +50,44 @@ namespace TCAPArchive.Api.Controllers
 			return Created("decoy", createdDecoy);
 
 		}
-	}
+
+        [HttpPut]
+        public IActionResult UpdateDecoy([FromBody] Decoy decoy)
+        {
+            if (decoy == null)
+                return BadRequest();
+
+            if (decoy.Handle == string.Empty)
+            {
+                ModelState.AddModelError("Handle", "The handle shouldn't be empty");
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var decoyToUpdate = _repository.GetDecoyById(decoy.Id);
+
+            if (decoyToUpdate == null)
+                return NotFound();
+
+            _repository.UpdateDecoy(decoy);
+
+            return NoContent(); //success
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDecoy(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var decoyToDelete = _repository.GetDecoyById(id);
+            if (decoyToDelete == null)
+                return NotFound();
+
+            _repository.DeleteDecoy(id);
+
+            return NoContent();//success
+        }
+    }
 }

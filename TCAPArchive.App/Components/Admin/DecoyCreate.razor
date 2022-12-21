@@ -1,0 +1,31 @@
+﻿@using TCAPArchive.Shared.Domain
+
+
+<EditForm Model="@decoy" OnValidSubmit="@HandleValidSubmit">
+
+     <div class="col-md-6 p-3">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Choose Predator: </RadzenText>
+                <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@predators @bind-Value=@decoy.PredatorId
+                                TextProperty="FirstName" ValueProperty="Id"  Class="w-100" />
+            </RadzenCard>
+        </div>
+
+    <div class="row mb-3">
+        <label for="handle" class="col-form-label col-md-3">Handle: </label>
+        <div class="col-md-8">
+            <InputText id="handle" @bind-Value="@decoy.Handle" class="form-control col-md-8" placeholder="Enter handle"></InputText>
+        </div>
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => decoy.Handle)" />
+    </div>
+    <div class="row mb-3">
+        <label for="image" class="col-12 col-sm-3">Select image: </label>
+        <div class="col-md-8">
+            <InputFile OnChange="OnInputFileChangeDecoy" />
+        </div>
+
+    </div>
+    <button type="submit" class="btn btn-primary me-1">Save Decoy</button>
+</EditForm>
+
+<div class="alert @StatusClass">@Message</div>

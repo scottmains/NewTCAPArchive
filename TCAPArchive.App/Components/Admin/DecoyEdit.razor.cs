@@ -5,15 +5,15 @@ using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.App.Components.Admin
 {
-    public partial class PredatorEdit
+    public partial class DecoyEdit
     {
 
         [Inject]
-        public IPredatorDataService? PredatorDataService { get; set; }
+        public IDecoyDataService? DecoyDataService { get; set; }
 
         [Parameter]
-        public Guid predatorId { get; set; }
-        public Predator predator { get; set; }
+        public Guid decoyId { get; set; }
+        public Decoy decoy { get; set; }
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
@@ -23,35 +23,34 @@ namespace TCAPArchive.App.Components.Admin
         {
             await base.OnInitializedAsync();
 
-            predator = await PredatorDataService.GetPredatorById(predatorId);
-
+            decoy = await DecoyDataService.GetDecoyById(decoyId);
         }
-
 
         protected async Task HandleValidSubmit()
         {
 
-            if (selectedFilePredator != null)
+            if (selectedFileDecoy != null)
             {
-                var file = selectedFilePredator;
+                var file = selectedFileDecoy;
                 Stream stream = file.OpenReadStream();
                 MemoryStream ms = new();
                 await stream.CopyToAsync(ms);
                 stream.Close();
-                predator.ImageTitle = file.Name;
-                predator.ImageData = ms.ToArray();
+                decoy.ImageTitle = file.Name;
+                decoy.ImageData = ms.ToArray();
             }
 
-            await PredatorDataService.UpdatePredator(predator);
+            await DecoyDataService.UpdateDecoy(decoy);
             StatusClass = "alert-success";
-            Message = "Predator updated successfully.";
+            Message = "Employee updated successfully.";
             Saved = true;
+
         }
 
-        private IBrowserFile selectedFilePredator;
-        private void OnInputFileChangePredator(InputFileChangeEventArgs e)
+        private IBrowserFile selectedFileDecoy;
+        private void OnInputFileChangeDecoy(InputFileChangeEventArgs e)
         {
-            selectedFilePredator = e.File;
+            selectedFileDecoy = e.File;
             StateHasChanged();
         }
     }

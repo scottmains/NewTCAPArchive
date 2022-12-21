@@ -18,7 +18,13 @@ namespace TCAPArchive.Api.Controllers
 			_repository = repository;
 		}
 
-		[HttpPost]
+        [HttpGet]
+        public IActionResult GetChatSessions()
+        {
+            return Ok(_repository.GetAllChatSessions());
+        }
+
+        [HttpPost]
 		public ActionResult CreateChatlog([FromBody]ChatSession chatsession)
 		{
             if (chatsession == null)

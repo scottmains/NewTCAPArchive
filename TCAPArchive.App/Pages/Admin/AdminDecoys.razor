@@ -1,37 +1,35 @@
 ﻿@layout AdminLayout
-@page "/admin"
+@page "/admindecoys"
 @using TCAPArchive.Shared.Domain
 @inject DialogService DialogService
 @inject NotificationService NotificationService
 
 <div class="col-lg-2 p-3">
-    <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenPredatorCreate()" />
+    <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenDecoyCreate()" />
 </div>
-<RadzenDataList WrapItems="true" AllowPaging="true" Data="@Predators" TItem="Predator" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left">
-    <Template Context="predator">
-
+<RadzenDataList WrapItems="true" AllowPaging="true" Data="@Decoys" TItem="Decoy" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left">
+    <Template Context="decoy">
         <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
             <div class="container">
                 <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
                     <div class="col-lg-3 p-3">
-                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(predator.FirstName)</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(decoy.Handle)</RadzenText>
                         </div>
                         <div class="col-lg-7 p-3">
                             <div class="row d-flex">
                                 <div class="col-md-6 col-lg-2">
-                              
                                 </div>
-                        
+
                             </div>
                         </div>
                         <div class="col-lg-2 p-3">
-                            <RadzenButton Text=@($"Edit") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenPredatorEdit(predator.Id, predator.FirstName)" />
+                            <RadzenButton Text=@($"Edit") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenDecoyEdit(decoy.Id, decoy.Handle)" />
                         </div>
                         <div class="col-lg-2 p-3">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Click="@((args) => DeleteButtonClick(predator.Id))" @onclick:stopPropagation="true"></RadzenButton>
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Click="@((args) => DeleteButtonClick(decoy.Id))" @onclick:stopPropagation="true"></RadzenButton>
                         </div>
                     </div>
                 </div>
             </RadzenCard>
-    </Template>
-</RadzenDataList>
+        </Template>
+    </RadzenDataList>

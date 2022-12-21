@@ -3,17 +3,17 @@
 <EditForm Model="@chatsession" OnValidSubmit="@HandleValidSubmit">
 <div class="col-md-6 p-3">
         <RadzenCard>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Filtering</RadzenText>
-            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@chatsession.PredatorId Data=@predators TextProperty="PName" ValueProperty="DecoyID"
-                            Style="height:200px" Class="w-100" />
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Choose Predator</RadzenText>
+            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@predators @bind-Value=@chatsession.PredatorId
+                            TextProperty="FirstName" ValueProperty="Id" Class="w-100" />
         </RadzenCard>
     </div>
 
     <div class="col-md-6 p-3">
         <RadzenCard>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Filtering</RadzenText>
-            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@chatsession.DecoyId Data=@decoys TextProperty="DecoyName" ValueProperty="DecoyID"
-                            Style="height:200px" Class="w-100" />
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Choose Decoy</RadzenText>
+            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@decoys @bind-Value=@chatsession.DecoyId
+                            TextProperty="Handle" ValueProperty="Id" Class="w-100" />
         </RadzenCard>
     </div>
 

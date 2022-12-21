@@ -22,7 +22,7 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetAllPredators());
         }
-
+        
         [HttpGet("{id}")]
         public IActionResult GetPredatorById(Guid id)
         {
@@ -48,5 +48,44 @@ namespace TCAPArchive.Api.Controllers
 			return Created("predator", createdPredator);
 		}
 
-	}
+        [HttpPut]
+        public IActionResult UpdatePredator([FromBody] Predator predator)
+        {
+            if (predator == null)
+                return BadRequest();
+
+            if (predator.FirstName == string.Empty || predator.LastName == string.Empty)
+            {
+                ModelState.AddModelError("Name/FirstName", "The name or first name shouldn't be empty");
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var predatorToUpdate = _repository.GetPredatorById(predator.Id);
+
+            if (predatorToUpdate == null)
+                return NotFound();
+
+            _repository.UpdatePredator(predator);
+
+            return NoContent(); //success
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePredator(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var predatorToDelete = _repository.GetPredatorById(id);
+            if (predatorToDelete == null)
+                return NotFound();
+
+            _repository.DeletePredator(id);
+
+            return NoContent();//success
+        }
+
+    }
 }

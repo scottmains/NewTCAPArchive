@@ -29,6 +29,7 @@ namespace TCAPArchive.Api.Models
 
         public ChatSession CreateChatSession (ChatSession chatSession)
         {
+            if(chatSession.Lines != null)
             foreach(var chatline in chatSession.Lines)
             {
                 _ctx.ChatLines.Add(chatline);
@@ -39,25 +40,26 @@ namespace TCAPArchive.Api.Models
 			return addedEntity.Entity;
 		}
 
-        public bool CreateChatlog (List<ChatLine> chatlog)
-        {
-            foreach(var line in chatlog)
-            {
-				 _ctx.ChatLines.Add(line);
-			}
-
-            var success = _ctx.SaveChanges();
-
-            if (success == chatlog.Count())
-                return true;
-
-            return false;
-        }
+     
 
 		public void DeletePredator(Guid Id)
         {
-  
+            var foundPredator = _ctx.Predators.FirstOrDefault(e => e.Id == Id);
+            if (foundPredator == null) return;
+
+            _ctx.Remove(foundPredator);
+            _ctx.SaveChanges();
         }
+
+        public void DeleteDecoy(Guid Id)
+        {
+            var foundDecoy = _ctx.Decoys.FirstOrDefault(e => e.Id == Id);
+            if (foundDecoy == null) return;
+
+            _ctx.Remove(foundDecoy);
+            _ctx.SaveChanges();
+        }
+
         public void UpdatePredator(Predator predator)
         {
             var currentPredator = _ctx.Predators.FirstOrDefault(x => x.Id == predator.Id);
@@ -69,10 +71,26 @@ namespace TCAPArchive.Api.Models
                 currentPredator.Handle = predator.Handle;
                 currentPredator.Description = predator.Description;
                 currentPredator.StingLocation = predator.StingLocation;
+                currentPredator.ImageTitle = predator.ImageTitle;
                 currentPredator.ImageData = predator.ImageData;
             }
             _ctx.SaveChanges();
 
+        }
+
+        public void UpdateDecoy(Decoy decoy)
+        {
+            var currentDecoy = _ctx.Decoys.FirstOrDefault(x => x.Id == decoy.Id);
+
+            if (decoy != null)
+            {
+                currentDecoy.Handle = decoy.Handle;
+                currentDecoy.ImageTitle = decoy.ImageTitle;
+                currentDecoy.ImageData = decoy.ImageData;
+                currentDecoy.PredatorId = decoy.PredatorId;
+            }
+
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<ChatLine> GetAllChatLines()
@@ -107,16 +125,6 @@ namespace TCAPArchive.Api.Models
             }
         }
 
-        public Predator GetPredatorById(Guid Id)
-        {
-            return _ctx.Predators.Find(Id);
-        }
-
-        public Decoy GetDecoyById(Guid Id)
-        {
-            return _ctx.Decoys.Find(Id);
-        }
-
         public IEnumerable<Decoy> GetAllDecoys()
         {
             try
@@ -132,6 +140,34 @@ namespace TCAPArchive.Api.Models
                 return null;
             }
         }
+
+        public IEnumerable<ChatSession> GetAllChatSessions()
+        {
+            try
+            {
+                _logger.LogInformation("GetAllChatSessions was called");
+                return _ctx.ChatSessions
+                    .OrderBy(c => c.Id)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get queries: {ex}");
+                return null;
+            }
+        }
+
+        public Predator GetPredatorById(Guid Id)
+        {
+            return _ctx.Predators.Find(Id);
+        }
+
+        public Decoy GetDecoyById(Guid Id)
+        {
+            return _ctx.Decoys.Find(Id);
+        }
+
+     
         public bool SaveAll()
         {
             return _ctx.SaveChanges() > 0;
