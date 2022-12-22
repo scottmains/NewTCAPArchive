@@ -17,8 +17,11 @@ namespace TCAPArchive.Api.Models
         ChatSession GetChatSessionById(Guid Id);
         void UpdatePredator(Predator predator);
         void UpdateDecoy(Decoy decoy);
+        void UpdateChatSession(ChatSession chatsession);
         void DeletePredator(Guid Id);
         void DeleteDecoy(Guid Id);
+        void DeleteChatSession(Guid Id);
+        List<ChatLine> GetAllChatLinesByChatSession(Guid chatSessionId);
         bool SaveAll();
 
     }

@@ -14,7 +14,7 @@ namespace TCAPArchive.App.Components.Admin
         public IDecoyDataService? DecoyDataService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        public Predator predator { get; set; } 
+        public Predator predator { get; set; } = new Predator();
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;

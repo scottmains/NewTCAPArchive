@@ -7,6 +7,7 @@ using TCAPArchive.App.Pages;
 using TCAPArchive.App.Pages.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
+using TCAPArchive.Shared.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Match = System.Text.RegularExpressions.Match;
 
@@ -27,7 +28,7 @@ namespace TCAPArchive.App.Components.Admin
         public List<Predator> predators { get; set; } = new List<Predator>();
         public List<Decoy> decoys { get; set; } = new List<Decoy>();
 
-        public ChatSession chatsession { get; set; } = new ChatSession();
+        public ChatSessionViewModel chatsession {get; set;} = new ChatSessionViewModel();
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
@@ -42,6 +43,7 @@ namespace TCAPArchive.App.Components.Admin
         protected async Task HandleValidSubmit()
         {
 
+            chatsession.Id = Guid.NewGuid();
             var addedChatSession = await ChatlogDataService.AddChatSession(chatsession);
 
             if (addedChatSession != null)

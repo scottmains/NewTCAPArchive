@@ -29,13 +29,14 @@ namespace TCAPArchive.App.Pages.Admin
             {
                Decoy decoy = (await DecoyDataService.GetDecoyById(chatSession.DecoyId));
                Predator predator = (await PredatorDataService.GetPredatorById(chatSession.PredatorId));
-
+                var LineCount = (await ChatlogDataService.GetAllChatLinesByChatSession(chatSession.Id)).Count();
                 var viewModel = new AdminChatSessionViewModel
                 {
                     decoy = decoy,
                     predator = predator,
-                    ChatSession= chatSession    
-                };
+                    ChatSession = chatSession,
+                    LineCount = LineCount
+            };
 
                 adminChatSessions.Add(viewModel);
             }

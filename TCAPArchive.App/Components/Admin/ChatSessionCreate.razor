@@ -4,9 +4,9 @@
 <div class="col-md-6 p-3">
 
         <div class="row mb-3">
-            <label for="handle" class="col-form-label col-md-3">Handle: </label>
+            <label for="handle" class="col-form-label col-md-3">Chat Name: </label>
             <div class="col-md-8">
-                <InputText id="handle" @bind-Value="@chatsession.Name" class="form-control col-md-8" placeholder="Enter handle"></InputText>
+                <InputText id="handle" @bind-Value="@chatsession.Name" class="form-control col-md-8" placeholder="Enter Chat Name"></InputText>
             </div>
             <ValidationMessage class="offset-md-3 col-md-8" For="@(() => chatsession.Name)" />
         </div>
@@ -26,8 +26,7 @@
         </RadzenCard>
     </div>
 
-  
-
     <button type="submit" class="btn btn-primary me-1">Save Chat Session</button>
 
 </EditForm>
+<div class="alert @StatusClass">@Message</div>

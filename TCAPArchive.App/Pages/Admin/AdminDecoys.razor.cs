@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
+using System;
+using System.Runtime.InteropServices;
 using TCAPArchive.App.Components.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
@@ -16,7 +18,26 @@ namespace TCAPArchive.App.Pages.Admin
 
         protected override async Task OnInitializedAsync()
         {
+            DialogService.OnOpen += Open;
+            DialogService.OnClose += Close;
             Decoys = (await DecoyDataService.GetAllDecoys()).ToList();
+        }
+
+        public void Dispose()
+        {
+            // The DialogService is a singleton so it is advisable to unsubscribe.
+            DialogService.OnOpen -= Open;
+            DialogService.OnClose -= Close;
+        }
+
+        void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+        {
+            
+        }
+
+        void Close(dynamic result)
+        {
+            StateHasChanged();
         }
 
         public async Task OpenDecoyEdit(Guid decoyId, string decoyHandle)

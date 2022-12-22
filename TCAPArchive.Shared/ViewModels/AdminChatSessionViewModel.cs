@@ -12,7 +12,7 @@ namespace TCAPArchive.Shared.ViewModels
        public ChatSession ChatSession { get; set; }
        public Predator predator { get; set; }
        public Decoy decoy { get; set; }
-
+       public int LineCount { get; set; }
     }
     
 

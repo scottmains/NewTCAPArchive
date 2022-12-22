@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text;
 using TCAPArchive.Shared.Domain;
+using TCAPArchive.Shared.ViewModels;
 
 namespace TCAPArchive.App.Services
 {
@@ -19,13 +20,27 @@ namespace TCAPArchive.App.Services
                 (await _httpClient.GetStreamAsync($"api/chatlog"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<IEnumerable<ChatLine>> GetAllChatLinesByChatSession(Guid ChatSessionId)
+        {
+            return await JsonSerializer.DeserializeAsync<List<ChatLine>>
+                (await _httpClient.GetStreamAsync($"api/chatlog/getchatlines/{ChatSessionId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
         public async Task<ChatSession> GetChatSessionById(Guid chatSessionId)
         {
             return await JsonSerializer.DeserializeAsync<ChatSession>
                 (await _httpClient.GetStreamAsync($"api/chatlog/{chatSessionId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<ChatSession> AddChatSession(ChatSession chatsession)
+        public async Task UpdateChatSession(ChatSession chatsession)
+        {
+            var chatSessionJson =
+                new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
+
+            await _httpClient.PutAsync("api/predator", chatSessionJson);
+        }
+
+        public async Task<ChatSession> AddChatSession(ChatSessionViewModel chatsession)
         {
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
@@ -53,6 +68,11 @@ namespace TCAPArchive.App.Services
             }
 
             return 0;
+        }
+
+        public async Task DeleteChatSession(Guid chatSessionId)
+        {
+            await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
         }
     }
 }

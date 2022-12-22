@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using TCAPArchive.Api.Models;
 using TCAPArchive.App.Components.Admin;
 using TCAPArchive.Shared.Domain;
+using TCAPArchive.Shared.ViewModels;
 
 namespace TCAPArchive.Api.Controllers
 {
@@ -31,8 +32,14 @@ namespace TCAPArchive.Api.Controllers
             return Ok(_repository.GetChatSessionById(id));
         }
 
+        [HttpGet("getchatlines/{id}")]
+        public IActionResult GetChatLinesByChatSession(Guid id)
+        {
+            return Ok(_repository.GetAllChatLinesByChatSession(id));
+        }
+
         [HttpPost]
-		public ActionResult CreateChatSession([FromBody]ChatSession chatsession)
+		public ActionResult CreateChatSession([FromBody]ChatSessionViewModel chatsession)
 		{
             if (chatsession == null)
                 return BadRequest();
@@ -45,9 +52,43 @@ namespace TCAPArchive.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdChatSession = _repository.CreateChatSession(chatsession);
+            var newChat = new ChatSession
+            {
+                Id = chatsession.Id,
+                ChatLength = chatsession.ChatLength,
+                PredatorId = chatsession.PredatorId,
+                DecoyId = chatsession.DecoyId,
+                Name = chatsession.Name,
+                Rating = chatsession.Rating,
+            };
+
+            var createdChatSession = _repository.CreateChatSession(newChat);
 
             return Created("chatlog", createdChatSession);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateChatSession([FromBody] ChatSession chatsession)
+        {
+            if (chatsession == null)
+                return BadRequest();
+
+            if (chatsession.Id == Guid.Empty)
+            {
+                ModelState.AddModelError("Id", "No Id");
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var chatSessionToUpdate = _repository.GetDecoyById(chatsession.Id);
+
+            if (chatSessionToUpdate == null)
+                return NotFound();
+
+            _repository.UpdateChatSession(chatsession);
+
+            return NoContent(); //success
         }
 
         [HttpPost("addchatlines")]
@@ -64,6 +105,19 @@ namespace TCAPArchive.Api.Controllers
             return Created("chatlog", chatLines);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteChatSession(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
 
+            var chatSessionToDelete = _repository.GetChatSessionById(id);
+            if (chatSessionToDelete == null)
+                return NotFound();
+
+            _repository.DeleteChatSession(id);
+
+            return NoContent();//success
+        }
     }
 }

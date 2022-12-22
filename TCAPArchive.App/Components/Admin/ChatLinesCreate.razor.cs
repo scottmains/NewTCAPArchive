@@ -52,6 +52,9 @@ namespace TCAPArchive.App.Components.Admin
             {
                 var chatlines = addLogWithFormat1(matches, chatsession.Id, predator, decoy);
                 var addedChatLinesCount = await ChatlogDataService.AddChatLines(chatlines);
+                chatsession.ChatLength = addedChatLinesCount;
+                await ChatlogDataService.UpdateChatSession(chatsession);
+
                 if (addedChatLinesCount > 0)
                 {
                     StatusClass = "alert-success";

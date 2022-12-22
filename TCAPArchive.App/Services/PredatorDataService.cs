@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using Blazored.LocalStorage;
+using System.Diagnostics.Metrics;
 using System.Text;
 using System.Text.Json;
 using TCAPArchive.Shared.Domain;
@@ -8,10 +9,12 @@ namespace TCAPArchive.App.Services
 	public class PredatorDataService : IPredatorDataService
 	{
 		private readonly HttpClient _httpClient;
+        private readonly ILocalStorageService _localStorageService;
 
-		public PredatorDataService(HttpClient httpClient)
+		public PredatorDataService(HttpClient httpClient, ILocalStorageService localStorageService)
 		{
 			_httpClient = httpClient;
+            _localStorageService = localStorageService;
 		}
 		#nullable disable
 		public async Task<IEnumerable<Predator>> GetAllPredators()

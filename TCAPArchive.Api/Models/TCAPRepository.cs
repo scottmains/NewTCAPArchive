@@ -65,6 +65,15 @@ namespace TCAPArchive.Api.Models
             _ctx.SaveChanges();
         }
 
+        public void DeleteChatSession(Guid Id)
+        {
+            var foundChatSession = _ctx.ChatSessions.FirstOrDefault(e => e.Id == Id);
+            if (foundChatSession == null) return;
+
+            _ctx.Remove(foundChatSession);
+            _ctx.SaveChanges();
+        }
+
         public void UpdatePredator(Predator predator)
         {
             var currentPredator = _ctx.Predators.FirstOrDefault(x => x.Id == predator.Id);
@@ -93,6 +102,19 @@ namespace TCAPArchive.Api.Models
                 currentDecoy.ImageTitle = decoy.ImageTitle;
                 currentDecoy.ImageData = decoy.ImageData;
                 currentDecoy.PredatorId = decoy.PredatorId;
+            }
+
+            _ctx.SaveChanges();
+        }
+
+        public void UpdateChatSession(ChatSession chatsession)
+        {
+            var currentChatSession = _ctx.ChatSessions.FirstOrDefault(x => x.Id == chatsession.Id);
+
+            if (chatsession != null)
+            {
+                currentChatSession.Name = chatsession.Name;
+                currentChatSession.ChatLength = chatsession.ChatLength;
             }
 
             _ctx.SaveChanges();
@@ -138,6 +160,23 @@ namespace TCAPArchive.Api.Models
                 _logger.LogInformation("GetAllChatSessions was called");
                 return _ctx.ChatSessions
                     .OrderBy(c => c.Id)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get queries: {ex}");
+                return null;
+            }
+        }
+
+        public List<ChatLine> GetAllChatLinesByChatSession(Guid chatSessionId)
+        {
+            try
+            {
+                _logger.LogInformation("GetAllChatLinesByChatSession was called");
+                return _ctx.ChatLines
+                    .Where(x => x.ChatSessionId == chatSessionId)
+                    .OrderBy(c => c.Position)
                     .ToList();
             }
             catch (Exception ex)

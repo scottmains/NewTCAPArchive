@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TCAPArchive.App;
 using TCAPArchive.App.Services;
 using Radzen;
-
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,6 +25,8 @@ client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 builder.Services.AddHttpClient<IChatlogDataService, ChatlogDataService>(client =>
 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
+builder.Services.AddScoped<ApplicationState>();
 
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();

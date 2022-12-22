@@ -51,7 +51,12 @@
         </div>
 
     </div>
-     <button type="submit" class="btn btn-primary me-1">Save predator</button>
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <RadzenButton Click="@((args) => dialogService.Close(false))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="me-1" />
+            <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Flat" Text="Update" Style="width: 120px" />
+        </div>
+    </div>
 </EditForm>
 
 <div class="alert @StatusClass">@Message</div>

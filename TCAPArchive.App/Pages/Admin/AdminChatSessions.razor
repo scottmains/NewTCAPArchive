@@ -10,34 +10,38 @@
 @if (adminChatSessions != null)
 {
    
-<RadzenDataList WrapItems="true" AllowPaging="true" Data="@adminChatSessions" TItem="AdminChatSessionViewModel" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left">
-    <Template Context="chatsession">
-
-        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
-            <div class="container">
-                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
-                    <div class="col-lg-3 p-3">
-                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(chatsession.ChatSession.Name)</RadzenText>
-                            </div>
-                            <div class="col-lg-7 p-3">
-                                <div class="row d-flex">
-                                    <div class="col-md-6 col-lg-2">
-                                        @chatsession.predator.FirstName
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-lg-2 p-3">
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Click="@((args) => DeleteButtonClick(chatsession.ChatSession.Id))" @onclick:stopPropagation="true"></RadzenButton>
-                            </div>
-                            <div class="col-lg-2 p-3">
-                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add" Text="Add" Size="ButtonSize.Medium" Click="@((args) => AddChatlogClick(chatsession.ChatSession.Id))" @onclick:stopPropagation="true"></RadzenButton>
-                            </div>
+    <RadzenCard Class="mt-3">
+        <RadzenDataList PageSize="4" WrapItems="true" AllowPaging="true"
+                    Data="@adminChatSessions" TItem="AdminChatSessionViewModel">
+            <Template Context="chatsession">
+                <RadzenCard Style="width: 250px">
+                    <div class="row">
+                        <div class="col-md-8 text-truncate">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{chatsession.LineCount}") Class="me-1" />
+                            <b>@(chatsession.ChatSession.Name)</b>
                         </div>
+                     
+                    </div>
+                    <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                    <div class="d-flex flex-row align-items-center">
+                        <RadzenImage Path="@chatsession.predator.Handle" Class="rounded-circle float-start me-3" Style="width: 80px; height: 80px;" />
+                        <div>
+                            <h4 class="mb-0">@(chatsession.predator.FirstName + " " + chatsession.predator.LastName)</h4>
+
+                            @if (chatsession.LineCount != 0)
+                            {
+                                <div>There is a chat log attached.</div>
+                            }
+                            else
+                            {
+                                <div>There is no chatlog attached.</div>
+                                }
+                            </div>
                     </div>
                 </RadzenCard>
-        </Template>
-    </RadzenDataList>
+            </Template>
+        </RadzenDataList>
+    </RadzenCard>
     } else{
         <h1> NO CHAT SESSIONS </h1>
     }

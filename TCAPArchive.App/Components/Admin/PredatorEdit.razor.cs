@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Radzen;
+using System;
+using System.Runtime.InteropServices;
+using TCAPArchive.App.Pages.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
+using static TCAPArchive.App.Pages.Admin.AdminPredators;
 
 namespace TCAPArchive.App.Components.Admin
 {
@@ -18,6 +23,7 @@ namespace TCAPArchive.App.Components.Admin
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
+      
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,6 +33,7 @@ namespace TCAPArchive.App.Components.Admin
 
         }
 
+     
 
         protected async Task HandleValidSubmit()
         {
@@ -43,9 +50,17 @@ namespace TCAPArchive.App.Components.Admin
             }
 
             await PredatorDataService.UpdatePredator(predator);
-            StatusClass = "alert-success";
-            Message = "Predator updated successfully.";
-            Saved = true;
+
+         
+                StatusClass = "alert-success";
+                Message = "Predator updated successfully.";
+                Saved = true;
+
+            if (Saved == true)
+            {
+                dialogService.Close(Message);
+               
+            }
         }
 
         private IBrowserFile selectedFilePredator;
