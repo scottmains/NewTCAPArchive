@@ -1,4 +1,6 @@
-﻿namespace TCAPArchive.Shared.Domain
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace TCAPArchive.Shared.Domain
 {
     public class ChatLine
     {
@@ -11,6 +13,7 @@
         public int LikeCount { get; set; }
 
         public Guid ChatSessionId { get; set; }
+        [ValidateNever]
         public ChatSession ChatSession { get; set; }
     }
 }

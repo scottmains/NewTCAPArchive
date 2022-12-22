@@ -28,7 +28,7 @@ namespace TCAPArchive.App.Components.Admin
         public List<Predator> predators { get; set; } = new List<Predator>();
         public List<Decoy> decoys { get; set; } = new List<Decoy>();
 
-        public ChatSessionViewModel chatsession {get; set;} = new ChatSessionViewModel();
+        public ChatSession chatsession {get; set;} = new ChatSession();
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;

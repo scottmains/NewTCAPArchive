@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileSystemGlobbing;
+using Radzen;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using TCAPArchive.App.Pages;
@@ -58,7 +59,7 @@ namespace TCAPArchive.App.Components.Admin
                 if (addedChatLinesCount > 0)
                 {
                     StatusClass = "alert-success";
-                    Message = addedChatLinesCount + "have been added";
+                    Message = addedChatLinesCount + " have been added";
                     Saved = false;
                 }
             }
@@ -67,6 +68,12 @@ namespace TCAPArchive.App.Components.Admin
                 StatusClass = "alert-danger";
                 Message = "Format is incorrect.";
                 Saved = false;
+            }
+
+            if (Saved == true)
+            {
+                dialogService.Close(Message);
+
             }
         }
 

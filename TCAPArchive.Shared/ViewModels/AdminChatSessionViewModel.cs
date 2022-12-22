@@ -9,10 +9,11 @@ namespace TCAPArchive.Shared.ViewModels
 {
     public class AdminChatSessionViewModel
     {
-       public ChatSession ChatSession { get; set; }
-       public Predator predator { get; set; }
-       public Decoy decoy { get; set; }
+       public ChatSession chatsession { get; set; }
+       public string PredatorName { get; set; }
+       public string DecoyName { get; set; }
        public int LineCount { get; set; }
+       public byte[] ImageData { get; set; }
     }
     
 

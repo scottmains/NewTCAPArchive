@@ -39,7 +39,7 @@ namespace TCAPArchive.Api.Controllers
         }
 
         [HttpPost]
-		public ActionResult CreateChatSession([FromBody]ChatSessionViewModel chatsession)
+		public ActionResult CreateChatSession([FromBody]ChatSession chatsession)
 		{
             if (chatsession == null)
                 return BadRequest();
@@ -52,17 +52,8 @@ namespace TCAPArchive.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var newChat = new ChatSession
-            {
-                Id = chatsession.Id,
-                ChatLength = chatsession.ChatLength,
-                PredatorId = chatsession.PredatorId,
-                DecoyId = chatsession.DecoyId,
-                Name = chatsession.Name,
-                Rating = chatsession.Rating,
-            };
 
-            var createdChatSession = _repository.CreateChatSession(newChat);
+            var createdChatSession = _repository.CreateChatSession(chatsession);
 
             return Created("chatlog", createdChatSession);
         }
@@ -81,7 +72,7 @@ namespace TCAPArchive.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var chatSessionToUpdate = _repository.GetDecoyById(chatsession.Id);
+            var chatSessionToUpdate = _repository.GetChatSessionById(chatsession.Id);
 
             if (chatSessionToUpdate == null)
                 return NotFound();

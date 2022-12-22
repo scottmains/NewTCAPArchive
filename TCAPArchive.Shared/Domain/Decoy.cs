@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TCAPArchive.Shared.Domain
 {
@@ -10,6 +12,7 @@ namespace TCAPArchive.Shared.Domain
         public string ImageTitle { get; set; }
         public byte[] ImageData { get; set; }
 
+        [ValidateNever]
         public List<ChatSession> ChatSessions { get; set; }
     }
 }

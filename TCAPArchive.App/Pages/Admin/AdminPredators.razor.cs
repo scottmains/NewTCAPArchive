@@ -41,7 +41,14 @@ namespace TCAPArchive.App.Pages.Admin
             
             var result = await DialogService.OpenAsync<PredatorCreate>($" Create ",
                    new Dictionary<string, object>() { },
-                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true, ShowClose = false }); 
+                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true, ShowClose = false });
+
+            if (result != null)
+            {
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = result, Duration = 5000 };
+                NotificationService.Notify(message);
+                StateHasChanged();
+            }
 
         }
 

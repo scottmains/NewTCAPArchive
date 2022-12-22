@@ -7,31 +7,31 @@
 <div class="col-lg-2 p-3">
     <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenPredatorCreate()" />
 </div>
-<RadzenDataList WrapItems="true" AllowPaging="true" Data="@Predators" TItem="Predator" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left">
-    <Template Context="predator">
-
-        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
-            <div class="container">
-                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
-                    <div class="col-lg-3 p-3">
-                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(predator.FirstName)</RadzenText>
-                        </div>
-                        <div class="col-lg-7 p-3">
-                            <div class="row d-flex">
-                                <div class="col-md-6 col-lg-2">
-                              
-                                </div>
-                        
-                            </div>
-                        </div>
-                        <div class="col-lg-2 p-3">
-                            <RadzenButton Text=@($"Edit") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenPredatorEdit(predator.Id, predator.FirstName)" />
-                        </div>
-                        <div class="col-lg-2 p-3">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Click="@((args) => DeleteButtonClick(predator.Id))" @onclick:stopPropagation="true"></RadzenButton>
-                        </div>
-                    </div>
-                </div>
-            </RadzenCard>
-    </Template>
-</RadzenDataList>
+  <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" 
+        FilterMode="FilterMode.Simple" PageSize="5" AllowPaging="true" AllowSorting="true" Data="@Predators" TItem="Predator" ColumnWidth="300px" 
+        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+        LogicalFilterOperator="LogicalFilterOperator.Or">
+        <Columns> 
+        <RadzenDataGridColumn TItem="Predator" Title="Photo" Sortable="false" Filterable="false" Width="50px" >
+            <Template Context="data">
+                <RadzenImage class="rz-gravatar" Path="@($"data:image/jpeg;base64,{Convert.ToBase64String(data.ImageData)}")" />
+            </Template>
+            </RadzenDataGridColumn>
+        
+        <RadzenDataGridColumn TItem="Predator" Property="FirstName" Title="First Name" Width="100px" />
+        <RadzenDataGridColumn TItem="Predator" Property="LastName" Title="Last Name" Width="100px" />
+        <RadzenDataGridColumn TItem="Predator" Property="Handle" Title="Handle"  />
+        <RadzenDataGridColumn TItem="Predator" Property="StingLocation" Title="Sting Location"  />
+        <RadzenDataGridColumn TItem="Predator" Title="Edit" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenButton Click="() => OpenPredatorEdit(data.Id, data.FirstName)" Icon="edit" Style=" width: 40px" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Predator" Title="Delete" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenButton Click="() =>  DeleteButtonClick(data.Id)" Icon="delete" Style=" width: 40px; background-color: red;" />
+            </Template>
+        </RadzenDataGridColumn>
+     
+        </Columns>
+    </RadzenDataGrid>

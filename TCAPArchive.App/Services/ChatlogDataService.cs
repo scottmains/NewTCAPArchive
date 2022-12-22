@@ -37,10 +37,10 @@ namespace TCAPArchive.App.Services
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
 
-            await _httpClient.PutAsync("api/predator", chatSessionJson);
+            await _httpClient.PutAsync("api/chatlog", chatSessionJson);
         }
 
-        public async Task<ChatSession> AddChatSession(ChatSessionViewModel chatsession)
+        public async Task<ChatSession> AddChatSession(ChatSession chatsession)
         {
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");

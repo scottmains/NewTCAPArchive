@@ -47,6 +47,12 @@ namespace TCAPArchive.App.Components.Admin
             Message = "Employee updated successfully.";
             Saved = true;
 
+            if (Saved == true)
+            {
+                dialogService.Close(Message);
+
+            }
+
         }
 
         private IBrowserFile selectedFileDecoy;

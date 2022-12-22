@@ -50,6 +50,13 @@ namespace TCAPArchive.App.Components.Admin
                 Message = "Something went wrong adding the new predator. Please try again.";
                 Saved = false;
             }
+
+            if (Saved == true)
+            {
+                dialogService.Close(Message);
+
+            }
+
         }
 
         private IBrowserFile selectedFilePredator;

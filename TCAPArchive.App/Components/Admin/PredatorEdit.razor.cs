@@ -49,7 +49,7 @@ namespace TCAPArchive.App.Components.Admin
                 predator.ImageData = ms.ToArray();
             }
 
-            await PredatorDataService.UpdatePredator(predator);
+                 await PredatorDataService.UpdatePredator(predator);
 
          
                 StatusClass = "alert-success";
