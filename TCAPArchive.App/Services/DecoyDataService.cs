@@ -42,17 +42,29 @@ namespace TCAPArchive.App.Services
             return null;
         }
 
-        public async Task UpdateDecoy(Decoy decoy)
+        public async Task<int> UpdateDecoy(Decoy decoy)
         {
             var decoyJson =
                 new StringContent(JsonSerializer.Serialize(decoy), Encoding.UTF8, "application/json");
 
-            await _httpClient.PutAsync("api/decoy", decoyJson);
+            var response = await _httpClient.PutAsync("api/decoy", decoyJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+            return 0;
         }
 
-        public async Task DeleteDecoy(Guid decoyId)
+        public async Task<int> DeleteDecoy(Guid decoyId)
         {
-            await _httpClient.DeleteAsync($"api/decoy/{decoyId}");
+            var response = await _httpClient.DeleteAsync($"api/decoy/{decoyId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+            return 0;
         }
 
     }

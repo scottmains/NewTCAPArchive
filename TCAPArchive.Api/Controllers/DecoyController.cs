@@ -70,9 +70,9 @@ namespace TCAPArchive.Api.Controllers
             if (decoyToUpdate == null)
                 return NotFound();
 
-            _repository.UpdateDecoy(decoy);
+            var success = _repository.UpdateDecoy(decoy);
 
-            return NoContent(); //success
+            return Ok(success); //success
         }
 
         [HttpDelete("{id}")]
@@ -85,9 +85,9 @@ namespace TCAPArchive.Api.Controllers
             if (decoyToDelete == null)
                 return NotFound();
 
-            _repository.DeleteDecoy(id);
+            var success = _repository.DeleteDecoy(id);
 
-            return NoContent();//success
+            return Ok(success);//success
         }
     }
 }

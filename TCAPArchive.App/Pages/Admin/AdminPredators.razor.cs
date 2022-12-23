@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
+using Radzen.Blazor;
 using TCAPArchive.App.Components.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
@@ -12,8 +13,10 @@ namespace TCAPArchive.App.Pages.Admin
         public IPredatorDataService? PredatorDataService { get; set; }
         public List<Predator> Predators { get; set; }
         public Predator predator { get; set; }
-     
-
+        private RadzenDataGrid<Predator> DataGridRef { get; set; }
+        protected string Message = string.Empty;
+        protected string StatusClass = string.Empty;
+        protected bool Saved;
 
         protected override async Task OnInitializedAsync()
         {
@@ -22,18 +25,16 @@ namespace TCAPArchive.App.Pages.Admin
 
         public async Task OpenPredatorEdit(Guid predatorId, string predatorName)
         {
-            var result= await DialogService.OpenAsync<PredatorEdit> ($" Edit {predatorName}",
+            await DialogService.OpenAsync<PredatorEdit> ($" Edit {predatorName}",
                    new Dictionary<string, object>() { { "predatorId", predatorId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
 
-            if (result != null)
-            {
-                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = result, Duration = 5000 };
-                NotificationService.Notify(message);
-                StateHasChanged();
-               
-            }
-      
+                await RefreshData();
+        }
+
+        public async Task RefreshData()
+        {
+            Predators = (await PredatorDataService.GetAllPredators()).ToList();
         }
 
         public async Task OpenPredatorCreate()
@@ -43,13 +44,8 @@ namespace TCAPArchive.App.Pages.Admin
                    new Dictionary<string, object>() { },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true, ShowClose = false });
 
-            if (result != null)
-            {
-                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = result, Duration = 5000 };
-                NotificationService.Notify(message);
-                StateHasChanged();
-            }
-
+        
+                await RefreshData();
         }
 
         public async Task DeleteButtonClick(Guid predatorId)
@@ -62,11 +58,28 @@ namespace TCAPArchive.App.Pages.Admin
             {
                 try
                 {
-                    Predators.RemoveAll(x => x.Id == predatorId);
-                    await PredatorDataService.DeletePredator(predatorId);
+                   
+                    var success = await PredatorDataService.DeletePredator(predatorId);
 
-                    NotificationService.Notify(NotificationSeverity.Info, $"Delete Successful",
-                        $"Predator has been deleted", duration: 4000);
+                    if (success > 0)
+                    {
+                        StatusClass = "alert-success";
+                        Saved = true;
+                    }
+
+                    if (Saved)
+                    {
+                        var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Succesfully deleted predator", Duration = 5000 };
+                        NotificationService.Notify(message);
+                    }
+                    else
+                    {
+                        var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to delete predator", Duration = 5000 };
+                        NotificationService.Notify(message);
+                    }
+
+
+                    await RefreshData();
                 }
                 catch (Exception exception)
                 {

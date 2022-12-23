@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TCAPArchive.Api.Models;
 using TCAPArchive.Shared.Domain;
 
@@ -49,7 +50,7 @@ namespace TCAPArchive.Api.Controllers
 		}
 
         [HttpPut]
-        public IActionResult UpdatePredator([FromBody] Predator predator)
+        public IActionResult UpdatePredator([FromBody]Predator predator)
         {
             if (predator == null)
                 return BadRequest();
@@ -67,9 +68,9 @@ namespace TCAPArchive.Api.Controllers
             if (predatorToUpdate == null)
                 return NotFound();
 
-            _repository.UpdatePredator(predator);
+            var result = _repository.UpdatePredator(predator);
 
-            return NoContent(); //success
+            return Ok(result); //success
         }
 
         [HttpDelete("{id}")]
@@ -82,10 +83,12 @@ namespace TCAPArchive.Api.Controllers
             if (predatorToDelete == null)
                 return NotFound();
 
-            _repository.DeletePredator(id);
+            var success =_repository.DeletePredator(id);
 
-            return NoContent();//success
+            return Ok(success);//success
         }
+
+     
 
     }
 }

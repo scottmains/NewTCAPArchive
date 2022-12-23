@@ -1,6 +1,6 @@
 ﻿
 @inject Radzen.DialogService dialogService
-
+@inject NotificationService NotificationService
 
 @if (decoy != null)
 {
@@ -20,7 +20,7 @@
                  <InputFile OnChange="OnInputFileChangeDecoy" />
         </div>
 
-         <button type="submit" class="btn btn-primary me-1">Update predator</button>
+        <RadzenButton ButtonType="ButtonType.Submit" Style="width: 160px" IsBusy=@busy Text="Save" />
     </EditForm>
     <div class="alert @StatusClass">@Message</div>
 }

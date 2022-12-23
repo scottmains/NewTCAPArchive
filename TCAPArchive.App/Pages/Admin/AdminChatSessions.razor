@@ -4,7 +4,7 @@
 @using TCAPArchive.Shared.ViewModels;
 @inject DialogService DialogService
 @inject NotificationService NotificationService
-
+@inject NavigationManager NavigationManager
 
 <div class="col-lg-2 p-3">
     <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenChatSessionCreate()" />
@@ -33,6 +33,11 @@
                 {
                     <RadzenIcon Icon="done" />
                 }
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AdminChatSessionViewModel" Title="Edit" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenButton Click="() => NavigateToChatSession(data.chatsession.Id)" Icon="edit" Style=" width: 40px" />
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="AdminChatSessionViewModel" Title="Delete" Sortable="false" Filterable="false" Width="50px">

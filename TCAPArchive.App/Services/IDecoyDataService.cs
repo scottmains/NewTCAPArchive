@@ -8,7 +8,7 @@ namespace TCAPArchive.App.Services
         Task<IEnumerable<Decoy>> GetAllDecoys();
         Task<Decoy> GetDecoyById(Guid decoyId);
         Task<Decoy> AddDecoy(Decoy decoy);
-        Task UpdateDecoy(Decoy decoy);
-        Task DeleteDecoy(Guid Id);
+        Task<int> UpdateDecoy(Decoy decoy);
+        Task<int> DeleteDecoy(Guid Id);
     }
 }

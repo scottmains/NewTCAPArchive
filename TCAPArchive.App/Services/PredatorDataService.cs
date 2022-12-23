@@ -44,17 +44,30 @@ namespace TCAPArchive.App.Services
             return null;
         }
 
-        public async Task UpdatePredator(Predator predator)
+        public async Task<int> UpdatePredator(Predator predator)
         {
             var predatorJson =
                 new StringContent(JsonSerializer.Serialize(predator), Encoding.UTF8, "application/json");
 
-            await _httpClient.PutAsync("api/predator", predatorJson);
+            var response = await _httpClient.PutAsync("api/predator", predatorJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+            return 0;
         }
 
-        public async Task DeletePredator(Guid predatorId)
+        public async Task<int> DeletePredator(Guid predatorId)
         {
-            await _httpClient.DeleteAsync($"api/predator/{predatorId}");
+            var response = await _httpClient.DeleteAsync($"api/predator/{predatorId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+
+            return 0;
         }
     }
 }

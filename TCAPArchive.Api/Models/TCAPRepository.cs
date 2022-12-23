@@ -47,34 +47,40 @@ namespace TCAPArchive.Api.Models
             return success;
         }
 
-    public void DeletePredator(Guid Id)
+    public int DeletePredator(Guid Id)
         {
             var foundPredator = _ctx.Predators.FirstOrDefault(e => e.Id == Id);
-            if (foundPredator == null) return;
+            if (foundPredator == null) return 0;
 
             _ctx.Remove(foundPredator);
-            _ctx.SaveChanges();
+            var success =_ctx.SaveChanges();
+
+            return success;
         }
 
-        public void DeleteDecoy(Guid Id)
+        public int DeleteDecoy(Guid Id)
         {
             var foundDecoy = _ctx.Decoys.FirstOrDefault(e => e.Id == Id);
-            if (foundDecoy == null) return;
+            if (foundDecoy == null) return 0;
 
             _ctx.Remove(foundDecoy);
-            _ctx.SaveChanges();
+           var success = _ctx.SaveChanges();
+
+            return success;
         }
 
-        public void DeleteChatSession(Guid Id)
+        public int DeleteChatSession(Guid Id)
         {
             var foundChatSession = _ctx.ChatSessions.FirstOrDefault(e => e.Id == Id);
-            if (foundChatSession == null) return;
+            if (foundChatSession == null) return 0 ;
 
             _ctx.Remove(foundChatSession);
-            _ctx.SaveChanges();
+           var success= _ctx.SaveChanges();
+
+            return success;
         }
 
-        public void UpdatePredator(Predator predator)
+        public int UpdatePredator(Predator predator)
         {
             var currentPredator = _ctx.Predators.FirstOrDefault(x => x.Id == predator.Id);
 
@@ -88,11 +94,12 @@ namespace TCAPArchive.Api.Models
                 currentPredator.ImageTitle = predator.ImageTitle;
                 currentPredator.ImageData = predator.ImageData;
             }
-            _ctx.SaveChanges();
+           var success = _ctx.SaveChanges();
 
+            return success;
         }
 
-        public void UpdateDecoy(Decoy decoy)
+        public int UpdateDecoy(Decoy decoy)
         {
             var currentDecoy = _ctx.Decoys.FirstOrDefault(x => x.Id == decoy.Id);
 
@@ -104,10 +111,12 @@ namespace TCAPArchive.Api.Models
                 currentDecoy.PredatorId = decoy.PredatorId;
             }
 
-            _ctx.SaveChanges();
+           var success= _ctx.SaveChanges();
+
+            return success;
         }
 
-        public void UpdateChatSession(ChatSession chatsession)
+        public int UpdateChatSession(ChatSession chatsession)
         {
             var currentChatSession = _ctx.ChatSessions.FirstOrDefault(x => x.Id == chatsession.Id);
 
@@ -117,7 +126,9 @@ namespace TCAPArchive.Api.Models
                 currentChatSession.ChatLength = chatsession.ChatLength;
             }
 
-            _ctx.SaveChanges();
+            var success = _ctx.SaveChanges();
+
+            return success;
         }
 
 

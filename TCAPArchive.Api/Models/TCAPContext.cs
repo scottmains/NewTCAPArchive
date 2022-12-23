@@ -41,6 +41,8 @@ namespace TCAPArchive.Api.Models
          .OnDelete(DeleteBehavior.Cascade)
          .HasForeignKey(cl => cl.ChatSessionId);
 
+        
+
         }
 
     }

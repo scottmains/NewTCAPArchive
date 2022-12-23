@@ -8,7 +8,7 @@ namespace TCAPArchive.App.Services
         Task<IEnumerable<Predator>> GetAllPredators();
         Task<Predator> GetPredatorById(Guid predatorId);
         Task<Predator> AddPredator(Predator predator);
-        Task UpdatePredator(Predator predator);
-        Task DeletePredator(Guid Id);
+        Task<int> UpdatePredator(Predator predator);
+        Task<int> DeletePredator(Guid Id);
     }
 }

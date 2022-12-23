@@ -22,8 +22,8 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
-      
+        protected bool busy;
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,11 +33,9 @@ namespace TCAPArchive.App.Components.Admin
 
         }
 
-     
-
         protected async Task HandleValidSubmit()
         {
-
+            busy = true;
             if (selectedFilePredator != null)
             {
                 var file = selectedFilePredator;
@@ -49,18 +47,22 @@ namespace TCAPArchive.App.Components.Admin
                 predator.ImageData = ms.ToArray();
             }
 
-                 await PredatorDataService.UpdatePredator(predator);
-
-         
-                StatusClass = "alert-success";
-                Message = "Predator updated successfully.";
-                Saved = true;
-
-            if (Saved == true)
+                var success = await PredatorDataService.UpdatePredator(predator);
+                busy = false;
+            if (success > 0)
             {
-                dialogService.Close(Message);
-               
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully edited predator", Duration = 5000 };
+                NotificationService.Notify(message);
             }
+            else
+            {
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to edit predator", Duration = 5000 };
+                NotificationService.Notify(message);
+            }
+
+            dialogService.Close();
+               
+           
         }
 
         private IBrowserFile selectedFilePredator;

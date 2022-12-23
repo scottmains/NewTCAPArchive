@@ -1,5 +1,5 @@
 ﻿@inject Radzen.DialogService dialogService
-
+@inject NotificationService NotificationService
 <EditForm Model="@chatsession" OnValidSubmit="@HandleValidSubmit">
 <div class="col-md-6 p-3">
 
@@ -26,7 +26,7 @@
         </RadzenCard>
     </div>
 
-    <button type="submit" class="btn btn-primary me-1">Save Chat Session</button>
+    <RadzenButton ButtonType="ButtonType.Submit" Style="width: 160px" IsBusy=@busy Text="Save" />
 
 </EditForm>
 <div class="alert @StatusClass">@Message</div>

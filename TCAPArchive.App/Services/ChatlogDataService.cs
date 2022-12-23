@@ -32,12 +32,19 @@ namespace TCAPArchive.App.Services
                 (await _httpClient.GetStreamAsync($"api/chatlog/{chatSessionId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task UpdateChatSession(ChatSession chatsession)
+        public async Task<int> UpdateChatSession(ChatSession chatsession)
         {
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
 
-            await _httpClient.PutAsync("api/chatlog", chatSessionJson);
+           var response = await _httpClient.PutAsync("api/chatlog", chatSessionJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+
+            return 0;
         }
 
         public async Task<ChatSession> AddChatSession(ChatSession chatsession)
@@ -70,9 +77,15 @@ namespace TCAPArchive.App.Services
             return 0;
         }
 
-        public async Task DeleteChatSession(Guid chatSessionId)
+        public async Task<int> DeleteChatSession(Guid chatSessionId)
         {
-            await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
+          var response =  await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+
+            return 0;
         }
     }
 }

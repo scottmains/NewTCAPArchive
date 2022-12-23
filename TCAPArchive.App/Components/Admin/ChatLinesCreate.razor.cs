@@ -31,7 +31,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
+        protected bool busy;
 
         protected override async Task OnInitializedAsync()
         {
@@ -45,35 +45,30 @@ namespace TCAPArchive.App.Components.Admin
 
         protected async Task HandleValidSubmit()
         {
-
+            busy = true;
             string chatLogFormat1 = @"(\w+) \((\d+/\d+/\d+ \d+:\d+:\d+ [AP]M)\): (.*)";
             MatchCollection matches = Regex.Matches(chatlines.chatlog, chatLogFormat1);
-            
+
             if (matches.Count > 0)
             {
                 var chatlines = addLogWithFormat1(matches, chatsession.Id, predator, decoy);
                 var addedChatLinesCount = await ChatlogDataService.AddChatLines(chatlines);
                 chatsession.ChatLength = addedChatLinesCount;
                 await ChatlogDataService.UpdateChatSession(chatsession);
-
+                busy = false;
                 if (addedChatLinesCount > 0)
                 {
-                    StatusClass = "alert-success";
-                    Message = addedChatLinesCount + " have been added";
-                    Saved = false;
+                    var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully added chatlog", Duration = 5000 };
+                    NotificationService.Notify(message);
                 }
-            }
-            else
-            {
-                StatusClass = "alert-danger";
-                Message = "Format is incorrect.";
-                Saved = false;
-            }
+                else
+                {
+                    var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to add chatlog", Duration = 5000 };
+                    NotificationService.Notify(message);
+                }
 
-            if (Saved == true)
-            {
-                dialogService.Close(Message);
 
+                dialogService.Close();
             }
         }
 

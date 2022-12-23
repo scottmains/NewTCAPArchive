@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Components;
+using Radzen;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -32,7 +33,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
+        protected bool busy;
 
         protected override async Task OnInitializedAsync()
         {
@@ -42,22 +43,23 @@ namespace TCAPArchive.App.Components.Admin
 
         protected async Task HandleValidSubmit()
         {
-
+            busy = true;
             chatsession.Id = Guid.NewGuid();
             var addedChatSession = await ChatlogDataService.AddChatSession(chatsession);
+            busy = false;
 
             if (addedChatSession != null)
             {
-                StatusClass = "alert-success";
-                Message = "New decoy added successfully.";
-                Saved = true;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully added chat session", Duration = 5000 };
+                NotificationService.Notify(message);
             }
             else
             {
-                StatusClass = "alert-danger";
-                Message = "Something went wrong adding the new decoy. Please try again.";
-                Saved = false;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to add chat session", Duration = 5000 };
+                NotificationService.Notify(message);
             }
+
+            dialogService.Close();
         }
 
         }

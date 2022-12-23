@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Radzen;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
@@ -20,7 +21,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
+        protected bool busy;
 
 
         protected override async Task OnInitializedAsync()
@@ -30,7 +31,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected async Task HandleValidSubmit()
         {
-            Saved = false;
+            busy = true;
 
             if (selectedFileDecoy != null)
             {
@@ -44,19 +45,19 @@ namespace TCAPArchive.App.Components.Admin
             }
 
             var addedDecoy = await DecoyDataService.AddDecoy(decoy);
-
+            busy = false;
             if (addedDecoy != null)
             {
-                StatusClass = "alert-success";
-                Message = "New decoy added successfully.";
-                Saved = true;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully added decoy", Duration = 5000 };
+                NotificationService.Notify(message);
             }
             else
             {
-                StatusClass = "alert-danger";
-                Message = "Something went wrong adding the new decoy. Please try again.";
-                Saved = false;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to add decoy", Duration = 5000 };
+                NotificationService.Notify(message);
             }
+
+            dialogService.Close();
         }
 
         private IBrowserFile selectedFileDecoy;

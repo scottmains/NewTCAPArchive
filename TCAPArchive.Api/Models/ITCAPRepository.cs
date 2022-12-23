@@ -15,12 +15,12 @@ namespace TCAPArchive.Api.Models
         Predator GetPredatorById(Guid Id);
         Decoy GetDecoyById(Guid Id);
         ChatSession GetChatSessionById(Guid Id);
-        void UpdatePredator(Predator predator);
-        void UpdateDecoy(Decoy decoy);
-        void UpdateChatSession(ChatSession chatsession);
-        void DeletePredator(Guid Id);
-        void DeleteDecoy(Guid Id);
-        void DeleteChatSession(Guid Id);
+        int UpdatePredator(Predator predator);
+        int UpdateDecoy(Decoy decoy);
+        int UpdateChatSession(ChatSession chatsession);
+        int DeletePredator(Guid Id);
+        int DeleteDecoy(Guid Id);
+        int DeleteChatSession(Guid Id);
         List<ChatLine> GetAllChatLinesByChatSession(Guid chatSessionId);
         bool SaveAll();
 

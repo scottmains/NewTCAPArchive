@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Radzen;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
@@ -19,7 +20,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
+        protected bool busy;
 
         protected override async Task OnInitializedAsync()
         {
@@ -30,7 +31,7 @@ namespace TCAPArchive.App.Components.Admin
 
         protected async Task HandleValidSubmit()
         {
-
+            busy = true;
             if (selectedFileDecoy != null)
             {
                 var file = selectedFileDecoy;
@@ -42,16 +43,21 @@ namespace TCAPArchive.App.Components.Admin
                 decoy.ImageData = ms.ToArray();
             }
 
-            await DecoyDataService.UpdateDecoy(decoy);
-            StatusClass = "alert-success";
-            Message = "Employee updated successfully.";
-            Saved = true;
-
-            if (Saved == true)
+            var success = await DecoyDataService.UpdateDecoy(decoy);
+            busy= false;
+            if (success > 0)
             {
-                dialogService.Close(Message);
-
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully edited decoy", Duration = 5000 };
+                NotificationService.Notify(message);
             }
+            else
+            {
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed edit decoy", Duration = 5000 };
+                NotificationService.Notify(message);
+            }
+
+
+            dialogService.Close();
 
         }
 

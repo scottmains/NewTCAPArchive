@@ -77,9 +77,9 @@ namespace TCAPArchive.Api.Controllers
             if (chatSessionToUpdate == null)
                 return NotFound();
 
-            _repository.UpdateChatSession(chatsession);
+           var success= _repository.UpdateChatSession(chatsession);
 
-            return NoContent(); //success
+            return Ok(success); //success
         }
 
         [HttpPost("addchatlines")]
@@ -106,9 +106,9 @@ namespace TCAPArchive.Api.Controllers
             if (chatSessionToDelete == null)
                 return NotFound();
 
-            _repository.DeleteChatSession(id);
+            var success =_repository.DeleteChatSession(id);
 
-            return NoContent();//success
+            return Ok(success);//success
         }
     }
 }

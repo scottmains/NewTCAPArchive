@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Radzen;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
@@ -18,12 +19,12 @@ namespace TCAPArchive.App.Components.Admin
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
-        protected bool Saved;
+        protected bool busy;
 
 
         protected async Task HandleValidSubmit()
         {
-            Saved = false;
+            busy = true;
       
             if (selectedFilePredator != null)
             {
@@ -37,26 +38,20 @@ namespace TCAPArchive.App.Components.Admin
             }
 
             var addedPredator = await PredatorDataService.AddPredator(predator);
+            busy = false;
 
             if (addedPredator != null)
             {
-                StatusClass = "alert-success";
-                Message = "New predator added successfully.";
-                Saved = true;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully added predator", Duration = 5000 };
+                NotificationService.Notify(message);
             }
             else
             {
-                StatusClass = "alert-danger";
-                Message = "Something went wrong adding the new predator. Please try again.";
-                Saved = false;
+                var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to add predator", Duration = 5000 };
+                NotificationService.Notify(message);
             }
 
-            if (Saved == true)
-            {
-                dialogService.Close(Message);
-
-            }
-
+            dialogService.Close();
         }
 
         private IBrowserFile selectedFilePredator;

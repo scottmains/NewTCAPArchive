@@ -1,0 +1,19 @@
+﻿@page "/chatlines/{ChatSessionId:guid}"
+
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true"
+                FilterMode="FilterMode.Simple" PageSize="50" AllowPaging="true" AllowSorting="true" Data="@adminChatlines" TItem="AdminEditChatLinesViewModel" ColumnWidth="300px"
+                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Title="Photo" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenImage class="rz-gravatar" Path="@($"data:image/jpeg;base64,{Convert.ToBase64String(data.ImageData)}")" />
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.SenderHandle" Title="Handle" Width="100px" />
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.Message" Title="Message" Width="400px" />
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.TimeStamp" Title="Time Sent" Width="200px" />
+    </Columns>
+</RadzenDataGrid>

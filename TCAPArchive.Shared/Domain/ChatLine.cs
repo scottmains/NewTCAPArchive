@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TCAPArchive.Shared.Domain
 {
@@ -13,7 +15,6 @@ namespace TCAPArchive.Shared.Domain
         public int LikeCount { get; set; }
 
         public Guid ChatSessionId { get; set; }
-        [ValidateNever]
-        public ChatSession ChatSession { get; set; }
+        public ChatSession? ChatSession { get; set; }
     }
 }
