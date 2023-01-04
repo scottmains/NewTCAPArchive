@@ -42,7 +42,7 @@ namespace TCAPArchive.App.Pages.Admin
             
             var result = await DialogService.OpenAsync<PredatorCreate>($" Create ",
                    new Dictionary<string, object>() { },
-                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true, ShowClose = false });
+                   new DialogOptions() { Width = "700px", Height = "600px", Resizable = true, Draggable = true, ShowClose = true });
 
         
                 await RefreshData();

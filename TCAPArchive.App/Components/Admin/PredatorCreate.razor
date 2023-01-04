@@ -1,63 +1,49 @@
-﻿
+﻿@using TCAPArchive.Shared.Domain;
+
 @inject Radzen.DialogService dialogService
 @inject NotificationService NotificationService
-<EditForm Model="@predator" OnValidSubmit="@HandleValidSubmit">
-    <div class="row mb-3">
-        <label for="firstName" class="col-form-label col-md-3">First Name: </label>
-        <div class="col-md-8">
-            <InputText id="firstName" @bind-Value="@predator.FirstName" class="form-control col-md-8" placeholder="Enter first name"></InputText>
+
+
+<RadzenTemplateForm TItem="@Predator" Data=@predator Submit=@HandleValidSubmit>
+    <RadzenFieldset Text="Create Predator">
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <RadzenLabel Text="First Name" />
+            </div>
+            <div class="col">
+                <RadzenTextBox style="display: block" Name="FirstName" @bind-Value=@predator.FirstName Class="w-100" />
+                <RadzenRequiredValidator Component="FirstName" Text="First name is required" Popup=true Style="position: absolute" />
+            </div>
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.FirstName)" />
-
-    </div>
-    <div class="row mb-3">
-        <label for="lastName" class="col-form-label col-md-3">Last Name: </label>
-        <div class="col-md-8">
-            <InputText id="firstName" @bind-Value="@predator.LastName" class="form-control col-md-8" placeholder="Enter last name"></InputText>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <RadzenLabel Text="Last Name" />
+            </div>
+            <div class="col">
+                <RadzenTextBox style="display: block" Name="LastName" @bind-Value=@predator.LastName Class="w-100" />
+                <RadzenRequiredValidator Component="LastName" Text="Last name is required" Popup=true Style="position: absolute" />
+            </div>
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.LastName)" />
-
-    </div>
-
-    <div class="row mb-3">
-        <label for="description" class="col-form-label col-md-3">Description: </label>
-        <div class="col-md-8">
-            <InputText id="description" @bind-Value="@predator.Description" class="form-control col-md-8" placeholder="Enter description"></InputText>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <RadzenLabel Text="Handle" />
+            </div>
+            <div class="col">
+                <RadzenTextBox style="display: block" Name="Handle" @bind-Value=@predator.Handle Class="w-100" />
+                <RadzenRequiredValidator Component="Handle" Text="Handle is required" Popup=true Style="position: absolute" />
+            </div>
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.Description)" />
-    </div>
-
-     <div class="row mb-3">
-        <label for="stinglocation" class="col-form-label col-md-3">Sting Location: </label>
-       <div class="col-md-8">
-            <InputText id="stinglocation" @bind-Value="@predator.StingLocation" class="form-control col-md-8" placeholder="Enter Sting Location"></InputText>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <RadzenLabel Text="Sting Location" />
+            </div>
+            <div class="col">
+                <RadzenTextBox style="display: block" Name="StingLocation" @bind-Value=@predator.StingLocation Class="w-100" />
+                <RadzenRequiredValidator Component="LastName" Text="Sting Location is required" Popup=true Style="position: absolute" />
+            </div>
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.StingLocation)" />
-
-    </div>
-
-    <div class="row mb-3">
-        <label for="handle" class="col-form-label col-md-3">Handle: </label>
-        <div class="col-md-8">
-            <InputText id="handle" @bind-Value="@predator.Handle" class="form-control col-md-8" placeholder="Enter handle"></InputText>
-        </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => predator.Handle)" />
-
-    </div>
-    <div class="row mb-3">
-        <label for="image" class="col-12 col-sm-3">Select image: </label>
-        <div class="col-md-8">
-            <InputFile OnChange="OnInputFileChangePredator" />
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-end">
-            <RadzenButton Click="@((args) => dialogService.Close(false))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="me-1" />
-            
-            <RadzenButton ButtonType="ButtonType.Submit" Style="width: 160px" IsBusy=@busy Text="Save" />
-        </div>
-    </div>
-</EditForm>
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Create"></RadzenButton>
+    </RadzenFieldset>
+</RadzenTemplateForm>
 
 <div class="alert @StatusClass">@Message</div>
