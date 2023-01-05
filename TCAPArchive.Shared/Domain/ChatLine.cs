@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -11,6 +12,7 @@ namespace TCAPArchive.Shared.Domain
         public string SenderHandle { get; set; }
 		public string Message { get; set; }
         public DateTime TimeStamp { get; set; }
+   
         public int Position { get; set; }
         public int LikeCount { get; set; }
 

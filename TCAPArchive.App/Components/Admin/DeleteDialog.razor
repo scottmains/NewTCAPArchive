@@ -1,0 +1,13 @@
+﻿
+
+@inject Radzen.DialogService dialogService
+@inject NotificationService NotificationService
+
+
+<div class="row">
+    <div class="col-md-12 text-end">
+        <RadzenButton Click="@((args) => dialogService.Close(false))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="me-1" />
+        <RadzenButton Click="DeleteEntity" ButtonStyle="ButtonStyle.Danger" ButtonType="ButtonType.Submit" Style="width: 160px" IsBusy=@busy Text="Delete" />
+    </div>
+</div>
+

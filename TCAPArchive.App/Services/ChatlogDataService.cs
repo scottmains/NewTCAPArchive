@@ -32,12 +32,35 @@ namespace TCAPArchive.App.Services
                 (await _httpClient.GetStreamAsync($"api/chatlog/{chatSessionId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<ChatLine> GetChatLineById(Guid chatLineId)
+        {
+            return await JsonSerializer.DeserializeAsync<ChatLine>
+                (await _httpClient.GetStreamAsync($"api/chatlog/chatline/{chatLineId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
         public async Task<int> UpdateChatSession(ChatSession chatsession)
         {
+            
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
 
            var response = await _httpClient.PutAsync("api/chatlog", chatSessionJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
+            }
+
+            return 0;
+        }
+
+        public async Task<int> UpdateChatLine(ChatLine chatLine)
+        {
+
+            var chatLineJson =
+                new StringContent(JsonSerializer.Serialize(chatLine), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync("api/chatlog/chatline", chatLineJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -58,7 +81,6 @@ namespace TCAPArchive.App.Services
             {
                 return await JsonSerializer.DeserializeAsync<ChatSession>(await response.Content.ReadAsStreamAsync());
             }
-
             return null;
         }
 
@@ -77,6 +99,22 @@ namespace TCAPArchive.App.Services
             return 0;
         }
 
+        public async Task<int> InsertChatLine(AdminInsertChatLineViewModel chatLine)
+        {
+            var chatLinesJson =
+               new StringContent(JsonSerializer.Serialize(chatLine), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("api/chatlog/insertchatline", chatLinesJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return response;
+            }
+
+            return 0;
+
+        }
+
         public async Task<int> DeleteChatSession(Guid chatSessionId)
         {
           var response =  await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
@@ -84,7 +122,6 @@ namespace TCAPArchive.App.Services
             {
                 return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
             }
-
             return 0;
         }
     }

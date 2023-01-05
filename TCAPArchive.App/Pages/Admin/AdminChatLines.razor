@@ -1,5 +1,9 @@
 ﻿@page "/chatlines/{ChatSessionId:guid}"
+@layout AdminLayout
 
+
+@inject DialogService DialogService
+@inject NotificationService NotificationService
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true"
                 FilterMode="FilterMode.Simple" PageSize="50" AllowPaging="true" AllowSorting="true" Data="@adminChatlines" TItem="AdminEditChatLinesViewModel" ColumnWidth="300px"
@@ -15,5 +19,16 @@
         <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.SenderHandle" Title="Handle" Width="100px" />
         <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.Message" Title="Message" Width="400px" />
         <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.TimeStamp" Title="Time Sent" Width="200px" />
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Property="chatLine.Position" Title="Position" Width="50px" />
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Title="Edit" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenButton Click="() => OpenChatLineEdit(data.chatLine.Id, data.chatLine.SenderHandle)" Icon="edit" Style=" width: 40px" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AdminEditChatLinesViewModel" Title="Insert" Sortable="false" Filterable="false" Width="50px">
+            <Template Context="data">
+                <RadzenButton Click="() => InsertChatLine(data.chatLine.Id)" Icon="add" Style=" width: 40px" />
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>

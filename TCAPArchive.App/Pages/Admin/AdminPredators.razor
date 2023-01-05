@@ -29,7 +29,7 @@
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="Predator" Title="Delete" Sortable="false" Filterable="false" Width="50px">
             <Template Context="data">
-                <RadzenButton Click="() =>  DeleteButtonClick(data.Id)" Icon="delete" Style=" width: 40px; background-color: red;" />
+                <RadzenButton Click="() =>  OpenDeleteDialog(data.Id, data.FirstName)" Icon="delete" Style=" width: 40px; background-color: red;" />
             </Template>
         </RadzenDataGridColumn>
      

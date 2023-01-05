@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 
 using Radzen;
+using Radzen.Blazor;
+using System.Numerics;
 using TCAPArchive.App.Components.Admin;
+using TCAPArchive.App.Components.Admin.Create;
+using TCAPArchive.App.Components.Admin.Edit;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
@@ -21,7 +25,7 @@ namespace TCAPArchive.App.Pages.Admin
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
-
+        protected bool busy;
         public List<AdminChatSessionViewModel> adminChatSessions { get; set; }
 
 
@@ -80,8 +84,6 @@ namespace TCAPArchive.App.Pages.Admin
            var result = await DialogService.OpenAsync<ChatSessionCreate>($" Create ",
                    new Dictionary<string, object>() { },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-
-        
                await RefreshData();
             }
         
@@ -90,52 +92,15 @@ namespace TCAPArchive.App.Pages.Admin
             var result = await DialogService.OpenAsync<ChatLinesCreate>($" Add Chatlog ",
                    new Dictionary<string, object>() { { "chatSessionId", chatSessionId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-
-        
                 await RefreshData();
             }
-        
-        public async Task DeleteButtonClick(Guid chatSessionId)
+
+        public async Task OpenDeleteDialog(Guid chatSessionId, string chatSessionName)
         {
-
-            Saved = false;
-            // Ask for confirmation:
-            var confirmResult = await DialogService.Confirm(
-                "Are you sure?", "Delete Chat Session");
-
-            if (confirmResult.HasValue && confirmResult.Value)
-            {
-                try
-                {
-                 var success =  await ChatlogDataService.DeleteChatSession(chatSessionId);
-
-                    if (success > 0) {
-                        StatusClass = "alert-success";
-                        Message = "Chatsession deleted successfully.";
-                        Saved = true;
-                    }
-                
-                if (Saved == true)
-                {
-                 var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = Message, Duration = 5000 };
-                 NotificationService.Notify(message);
-                 await RefreshData();
-                }
-                    else
-                    {
-                        var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to delete chatsession", Duration = 5000 };
-                        NotificationService.Notify(message);
-                    }
-
-                }
-                catch (Exception exception)
-                {
-                    NotificationService.Notify(NotificationSeverity.Error, $"Error",
-                        $"Foo", duration: -1);
-
-                }
-
-            }
+            await DialogService.OpenAsync<DeleteDialog>($" Delete {chatSessionName}",
+                   new Dictionary<string, object>() { { "ChatSessionId", chatSessionId } },
+                   new DialogOptions() { Width = "500px", Height = "200px", Resizable = true, Draggable = true });
+            await RefreshData();
         }
 
         protected void NavigateToChatSession(Guid ChatSessionId)

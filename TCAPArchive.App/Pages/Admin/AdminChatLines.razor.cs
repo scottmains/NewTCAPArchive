@@ -2,6 +2,9 @@
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
+using TCAPArchive.App.Components.Admin.Create;
+using TCAPArchive.App.Components.Admin.Edit;
+using Radzen;
 
 namespace TCAPArchive.App.Pages.Admin
 {
@@ -56,6 +59,30 @@ namespace TCAPArchive.App.Pages.Admin
 
             adminChatlines = newChatLines;
 
+        }
+
+        public async Task RefreshData()
+        {
+            ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x => x.Position).ToList();
+        }
+
+
+        public async Task OpenChatLineEdit(Guid chatLineId, string senderHandle)
+        {
+            var result = await DialogService.OpenAsync<ChatLineEdit>($" Edit message by {senderHandle}",
+                   new Dictionary<string, object>() { { "chatLineId", chatLineId } },
+                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+
+            await RefreshData();
+            StateHasChanged();
+        }
+
+        public async Task InsertChatLine(Guid ChatLineId)
+        {
+            var result = await DialogService.OpenAsync<InsertChatLineCreate>($" Create ",
+                    new Dictionary<string, object>() { },
+                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+            await RefreshData();
         }
 
     }

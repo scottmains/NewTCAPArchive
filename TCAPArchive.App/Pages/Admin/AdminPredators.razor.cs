@@ -2,6 +2,8 @@
 using Radzen;
 using Radzen.Blazor;
 using TCAPArchive.App.Components.Admin;
+using TCAPArchive.App.Components.Admin.Create;
+using TCAPArchive.App.Components.Admin.Edit;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
@@ -17,6 +19,7 @@ namespace TCAPArchive.App.Pages.Admin
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
+      
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,48 +51,17 @@ namespace TCAPArchive.App.Pages.Admin
                 await RefreshData();
         }
 
-        public async Task DeleteButtonClick(Guid predatorId)
+        public async Task OpenDeleteDialog(Guid predatorId, string predatorName)
         {
-            // Ask for confirmation:
-            var confirmResult = await DialogService.Confirm(
-                "Deleting this predator will delete all related chat sessions, are you sure?", "Delete Predator");
+            await DialogService.OpenAsync<DeleteDialog>($" Delete {predatorName}",
+                   new Dictionary<string, object>() { { "predatorId", predatorId } },
+                   new DialogOptions() { Width = "500px", Height = "200px", Resizable = true, Draggable = true });
 
-            if (confirmResult.HasValue && confirmResult.Value)
-            {
-                try
-                {
-                   
-                    var success = await PredatorDataService.DeletePredator(predatorId);
+            await RefreshData();
 
-                    if (success > 0)
-                    {
-                        StatusClass = "alert-success";
-                        Saved = true;
-                    }
+        }
 
-                    if (Saved)
-                    {
-                        var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Succesfully deleted predator", Duration = 5000 };
-                        NotificationService.Notify(message);
-                    }
-                    else
-                    {
-                        var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Error, Summary = "Failure", Detail = "Failed to delete predator", Duration = 5000 };
-                        NotificationService.Notify(message);
-                    }
-
-
-                    await RefreshData();
-                }
-                catch (Exception exception)
-                {
-                    NotificationService.Notify(NotificationSeverity.Error, $"Error",
-                        $"{exception}", duration: -1);
-
-                }
-
-            }
         }
 
     }
-}
+

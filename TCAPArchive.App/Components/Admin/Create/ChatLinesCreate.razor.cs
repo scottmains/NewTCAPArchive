@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.FileSystemGlobbing;
 using Radzen;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using TCAPArchive.App.Pages;
-using TCAPArchive.App.Pages.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
-namespace TCAPArchive.App.Components.Admin
+namespace TCAPArchive.App.Components.Admin.Create
 {
     public partial class ChatLinesCreate
     {

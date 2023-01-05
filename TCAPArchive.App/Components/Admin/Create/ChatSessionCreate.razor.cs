@@ -12,7 +12,7 @@ using TCAPArchive.Shared.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Match = System.Text.RegularExpressions.Match;
 
-namespace TCAPArchive.App.Components.Admin
+namespace TCAPArchive.App.Components.Admin.Create
 {
     public partial class ChatSessionCreate
     {

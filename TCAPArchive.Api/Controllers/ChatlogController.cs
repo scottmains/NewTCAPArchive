@@ -31,6 +31,11 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetChatSessionById(id));
         }
+        [HttpGet("chatline/{id}")]
+        public IActionResult GetChatLineById(Guid id)
+        {
+            return Ok(_repository.GetChatLineById(id));
+        }
 
         [HttpGet("getchatlines/{id}")]
         public IActionResult GetChatLinesByChatSession(Guid id)
@@ -82,6 +87,30 @@ namespace TCAPArchive.Api.Controllers
             return Ok(success); //success
         }
 
+        [HttpPut("chatline")]
+        public IActionResult UpdateChatLine([FromBody] ChatLine chatLine)
+        {
+            if (chatLine == null)
+                return BadRequest();
+
+            if (chatLine.Id == Guid.Empty)
+            {
+                ModelState.AddModelError("Id", "No Id");
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var chatLineToUpdate = _repository.GetChatLineById(chatLine.Id);
+
+            if (chatLineToUpdate == null)
+                return NotFound();
+
+            var success = _repository.UpdateChatLine(chatLine);
+
+            return Ok(success); //success
+        }
+
         [HttpPost("addchatlines")]
         public ActionResult CreateChatLines([FromBody] List<ChatLine> chatlines)
         {
@@ -92,6 +121,19 @@ namespace TCAPArchive.Api.Controllers
                 return BadRequest(ModelState);
 
             var chatLines = _repository.AddChatLines(chatlines);
+
+            return Created("chatlog", chatLines);
+        }
+
+        public ActionResult InsertChatLine([FromBody] AdminInsertChatLineViewModel chatLine)
+        {
+            if (chatLine == null)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var insertedChatLine = _repository.InsertChatLine(chatLines);
 
             return Created("chatlog", chatLines);
         }

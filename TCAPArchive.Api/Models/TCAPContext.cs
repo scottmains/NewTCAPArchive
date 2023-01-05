@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.Api.Models
@@ -41,7 +42,7 @@ namespace TCAPArchive.Api.Models
          .OnDelete(DeleteBehavior.Cascade)
          .HasForeignKey(cl => cl.ChatSessionId);
 
-        
+    
 
         }
 

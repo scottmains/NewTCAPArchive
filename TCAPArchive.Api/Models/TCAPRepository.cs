@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using TCAPArchive.App.Components.Admin;
 using TCAPArchive.Shared.Domain;
+using TCAPArchive.Shared.ViewModels;
 
 namespace TCAPArchive.Api.Models
 {
@@ -47,7 +48,12 @@ namespace TCAPArchive.Api.Models
             return success;
         }
 
-    public int DeletePredator(Guid Id)
+       public int InsertChatLine(AdminInsertChatLineViewModel chatLine)
+        {
+            // need to move position of all entries after position number.
+        }
+
+        public int DeletePredator(Guid Id)
         {
             var foundPredator = _ctx.Predators.FirstOrDefault(e => e.Id == Id);
             if (foundPredator == null) return 0;
@@ -124,6 +130,23 @@ namespace TCAPArchive.Api.Models
             {
                 currentChatSession.Name = chatsession.Name;
                 currentChatSession.ChatLength = chatsession.ChatLength;
+            }
+
+            var success = _ctx.SaveChanges();
+
+            return success;
+        }
+
+        public int UpdateChatLine(ChatLine chatLine)
+        {
+            var currentChatLine = _ctx.ChatLines.FirstOrDefault(x => x.Id == chatLine.Id);
+
+            if (chatLine != null)
+            {
+                currentChatLine.Message = chatLine.Message;
+                currentChatLine.TimeStamp = chatLine.TimeStamp;
+                currentChatLine.SenderHandle = chatLine.SenderHandle;
+                currentChatLine.SenderId = chatLine.SenderId;   
             }
 
             var success = _ctx.SaveChanges();
@@ -211,7 +234,10 @@ namespace TCAPArchive.Api.Models
             return _ctx.ChatSessions.Find(Id);
         }
 
-
+        public ChatLine GetChatLineById(Guid Id)
+        {
+            return _ctx.ChatLines.Find(Id);
+        }
 
         public bool SaveAll()
         {

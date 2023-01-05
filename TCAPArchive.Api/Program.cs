@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<TCAPContext>(options =>
 options.UseSqlServer(
-builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
+builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"),o => o.CommandTimeout(180)
 ));
 
 builder.Services.AddCors(options =>
