@@ -99,7 +99,7 @@ namespace TCAPArchive.App.Services
             return 0;
         }
 
-        public async Task<int> InsertChatLine(AdminInsertChatLineViewModel chatLine)
+        public async Task<int> InsertChatLine(ChatLine chatLine)
         {
             var chatLinesJson =
                new StringContent(JsonSerializer.Serialize(chatLine), Encoding.UTF8, "application/json");
@@ -108,7 +108,7 @@ namespace TCAPArchive.App.Services
 
             if (response.IsSuccessStatusCode)
             {
-                return response;
+                return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
             }
 
             return 0;

@@ -125,7 +125,7 @@ namespace TCAPArchive.Api.Controllers
             return Created("chatlog", chatLines);
         }
 
-        public ActionResult InsertChatLine([FromBody] AdminInsertChatLineViewModel chatLine)
+        public ActionResult InsertChatLine([FromBody]ChatLine chatLine)
         {
             if (chatLine == null)
                 return BadRequest();
@@ -133,9 +133,9 @@ namespace TCAPArchive.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var insertedChatLine = _repository.InsertChatLine(chatLines);
+            var success = _repository.InsertChatLine(chatLine);
 
-            return Created("chatlog", chatLines);
+            return Ok(success);//success
         }
 
         [HttpDelete("{id}")]

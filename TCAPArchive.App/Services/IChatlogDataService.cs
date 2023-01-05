@@ -13,7 +13,7 @@ namespace TCAPArchive.App.Services
         Task<int> UpdateChatSession(ChatSession chatsession);
         Task<int> UpdateChatLine(ChatLine chatLine);
         Task<int> AddChatLines(List<ChatLine> chatlines);
-        Task<int> InsertChatLine(AdminInsertChatLineViewModel chatLine);
+        Task<int> InsertChatLine(ChatLine chatLine);
         Task<int> DeleteChatSession(Guid chatSessionId);
     }
 }

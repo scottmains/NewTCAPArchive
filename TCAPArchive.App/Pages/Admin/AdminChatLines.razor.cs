@@ -80,7 +80,7 @@ namespace TCAPArchive.App.Pages.Admin
         public async Task InsertChatLine(Guid ChatLineId)
         {
             var result = await DialogService.OpenAsync<InsertChatLineCreate>($" Create ",
-                    new Dictionary<string, object>() { },
+                    new Dictionary<string, object>() { { "ChatLineId", ChatLineId } },
                     new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
             await RefreshData();
         }

@@ -9,7 +9,7 @@ namespace TCAPArchive.Api.Models
         Predator AddPredator(Predator predator);
 		Decoy AddDecoy(Decoy decoy);
         ChatSession CreateChatSession (ChatSession chatSession);
-        int InsertChatLine(AdminInsertChatLineViewModel chatLine);
+        int InsertChatLine(ChatLine chatLine);
         int AddChatLines(List<ChatLine> chatlines);
         IEnumerable<Predator> GetAllPredators();
         IEnumerable<ChatSession> GetAllChatSessions();

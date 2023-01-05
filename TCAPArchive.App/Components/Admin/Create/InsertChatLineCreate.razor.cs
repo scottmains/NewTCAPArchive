@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
+using System;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
@@ -40,6 +41,11 @@ namespace TCAPArchive.App.Components.Admin.Create
 
         }
 
+        void OnChange(DateTime? value, string name, string format)
+        {
+            
+        }
+
         private List<AdminChatLineEditViewModel> addParticipantsToList(Predator predator, Decoy decoy)
         {
             var addParticipants = new List<AdminChatLineEditViewModel>();
@@ -63,8 +69,10 @@ namespace TCAPArchive.App.Components.Admin.Create
         protected async Task HandleValidSubmit()
         {
             busy = true;
-            chatLine.Id = Guid.NewGuid();
-            var addedChatLine = await ChatlogDataService.InsertChatLine(AdminInsertChatLineViewModel);
+            newChatLine.Id = Guid.NewGuid();
+            newChatLine.Position = chatLine.Position + 1;
+
+            var addedChatLine = await ChatlogDataService.InsertChatLine(newChatLine);
             busy = false;
 
             if (addedChatLine != null)

@@ -2,29 +2,29 @@
 @inject Radzen.DialogService dialogService
 
 
-<EditForm Model="@chatLine" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@newChatLine" OnValidSubmit="@HandleValidSubmit">
     <div class="col-md-6 p-3">
         <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Choose Sender: </RadzenText>
-            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@senders @bind-Value=@chatLine.SenderId
-                            TextProperty="SenderHandle" ValueProperty="SenderId" Class="w-100" />
+            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@senders @bind-Value=@newChatLine.SenderId
+                            TextProperty="SenderHandle" ValueProperty="senderId" Class="w-100" />
         </RadzenCard>
     </div>
     <div class="row mb-3">
         <label for="message" class="col-form-label col-md-3">Message: </label>
         <div class="col-md-8">
-            <InputText id="handle" @bind-Value="@chatLine.Message" class="form-control col-md-8"></InputText>
+            <InputText id="handle" @bind-Value="@newChatLine.Message" class="form-control col-md-8"></InputText>
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => chatLine.Message)" />
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => newChatLine.Message)" />
 
     </div>
 
     <div class="row mb-3">
         <label for="handle" class="col-form-label col-md-3">TimeStamp: </label>
         <div class="col-md-8">
-            <input type="datetime" id="timestamp" @bind="@chatLine.TimeStamp" class="form-control col-md-8"></input>
+            <RadzenDatePicker @bind-Value=@newChatLine.TimeStamp DateFormat="d" Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) Class="w-100" />
         </div>
-        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => chatLine.TimeStamp)" />
+        <ValidationMessage class="offset-md-3 col-md-8" For="@(() => newChatLine.TimeStamp)" />
 
     </div>
 

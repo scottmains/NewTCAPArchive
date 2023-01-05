@@ -48,9 +48,22 @@ namespace TCAPArchive.Api.Models
             return success;
         }
 
-       public int InsertChatLine(AdminInsertChatLineViewModel chatLine)
+       public int InsertChatLine(ChatLine chatLine)
         {
             // need to move position of all entries after position number.
+            var existingChatLines = _ctx.ChatLines
+                                    .Where(e => e.Position >= chatLine.Position &&  
+                                           e.ChatSessionId == chatLine.ChatSessionId);
+
+            foreach (var existingChatline in existingChatLines)
+            {
+                existingChatline.Position++;
+            }
+
+            _ctx.ChatLines.Add(chatLine);
+            var success = _ctx.SaveChanges();
+
+            return success;
         }
 
         public int DeletePredator(Guid Id)
