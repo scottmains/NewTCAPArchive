@@ -64,7 +64,7 @@ namespace TCAPArchive.App.Components.Admin.Create
         {
             busy = true;
             chatLine.Id = Guid.NewGuid();
-            var addedChatLine = await ChatlogDataService.InsertChatLine(ChatLine);
+            var addedChatLine = await ChatlogDataService.InsertChatLine(AdminInsertChatLineViewModel);
             busy = false;
 
             if (addedChatLine != null)
