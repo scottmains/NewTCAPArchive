@@ -31,6 +31,11 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetChatSessionById(id));
         }
+        [HttpGet("predatorid/{id}")]
+        public IActionResult GetChatSessionByPredatorId(Guid id)
+        {
+            return Ok(_repository.GetChatSessionByPredatorId(id));
+        }
         [HttpGet("chatline/{id}")]
         public IActionResult GetChatLineById(Guid id)
         {
@@ -124,7 +129,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Created("chatlog", chatLines);
         }
-
+        [HttpPost("insertchatline")]
         public ActionResult InsertChatLine([FromBody]ChatLine chatLine)
         {
             if (chatLine == null)

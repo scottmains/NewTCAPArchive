@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TCAPArchive.App.Components.Admin.Create
 {
@@ -21,6 +24,8 @@ namespace TCAPArchive.App.Components.Admin.Create
         public ChatLine chatLine { get; set; } 
         public ChatLine newChatLine { get; set; }   = new ChatLine();
         public List<AdminChatLineEditViewModel> senders { get; set; }
+        public Predator predator { get; set; }
+        public Decoy decoy { get; set; }
         protected bool busy;
 
 
@@ -32,8 +37,8 @@ namespace TCAPArchive.App.Components.Admin.Create
 
             var chatParticipants = await ChatlogDataService.GetChatSessionById(chatLine.ChatSessionId);
 
-            var predator = await PredatorDataService.GetPredatorById(chatParticipants.PredatorId);
-            var decoy = await DecoyDataService.GetDecoyById(chatParticipants.DecoyId);
+            predator = await PredatorDataService.GetPredatorById(chatParticipants.PredatorId);
+            decoy = await DecoyDataService.GetDecoyById(chatParticipants.DecoyId);
 
             var participantsList = addParticipantsToList(predator, decoy);
 
@@ -41,9 +46,15 @@ namespace TCAPArchive.App.Components.Admin.Create
 
         }
 
-        void OnChange(DateTime? value, string name, string format)
+        void OnChange(string value, string name)
         {
-            
+            string format = "MM/dd/yy hh:mm:ss tt";
+            var formatInfo = new DateTimeFormatInfo()
+            {
+                ShortDatePattern = format
+            };
+
+            newChatLine.TimeStamp = Convert.ToDateTime(value, formatInfo);
         }
 
         private List<AdminChatLineEditViewModel> addParticipantsToList(Predator predator, Decoy decoy)
@@ -69,13 +80,13 @@ namespace TCAPArchive.App.Components.Admin.Create
         protected async Task HandleValidSubmit()
         {
             busy = true;
-            newChatLine.Id = Guid.NewGuid();
-            newChatLine.Position = chatLine.Position + 1;
 
+            SetUpNewChatLine(newChatLine, chatLine);
+         
             var addedChatLine = await ChatlogDataService.InsertChatLine(newChatLine);
             busy = false;
 
-            if (addedChatLine != null)
+            if (addedChatLine > 0)
             {
                 var message = new NotificationMessage { Style = "position: fixed; top: 0; right: 0", Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Successfully added chat session", Duration = 5000 };
                 NotificationService.Notify(message);
@@ -87,6 +98,22 @@ namespace TCAPArchive.App.Components.Admin.Create
             }
 
             dialogService.Close();
+        }
+
+        private void SetUpNewChatLine(ChatLine newChatLine, ChatLine chatLine)
+        {
+            newChatLine.Id = Guid.NewGuid();
+            newChatLine.Position = chatLine.Position + 1;
+            newChatLine.ChatSessionId = chatLine.ChatSessionId;
+
+            if (newChatLine.SenderId == predator.Id)
+            {
+                newChatLine.SenderHandle = predator.Handle;
+            }
+            else
+            {
+                newChatLine.SenderHandle = decoy.Handle;
+            }
         }
     }
 }

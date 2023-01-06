@@ -9,6 +9,7 @@ namespace TCAPArchive.App.Services
         Task<IEnumerable<ChatLine>> GetAllChatLinesByChatSession(Guid chatSessionId);
         Task<ChatSession> GetChatSessionById(Guid chatSessionId);
         Task<ChatLine> GetChatLineById(Guid chatLineId);
+        Task<ChatSession> GetChatSessionByPredatorId(Guid predatorId);
         Task<ChatSession> AddChatSession(ChatSession chatsession);
         Task<int> UpdateChatSession(ChatSession chatsession);
         Task<int> UpdateChatLine(ChatLine chatLine);

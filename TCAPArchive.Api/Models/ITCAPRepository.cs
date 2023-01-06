@@ -17,6 +17,7 @@ namespace TCAPArchive.Api.Models
         Predator GetPredatorById(Guid Id);
         Decoy GetDecoyById(Guid Id);
         ChatSession GetChatSessionById(Guid Id);
+        ChatSession GetChatSessionByPredatorId(Guid Id);
         ChatLine GetChatLineById(Guid Id);
         int UpdatePredator(Predator predator);
         int UpdateDecoy(Decoy decoy);

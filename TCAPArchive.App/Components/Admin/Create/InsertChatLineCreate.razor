@@ -22,7 +22,8 @@
     <div class="row mb-3">
         <label for="handle" class="col-form-label col-md-3">TimeStamp: </label>
         <div class="col-md-8">
-            <RadzenDatePicker @bind-Value=@newChatLine.TimeStamp DateFormat="d" Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) Class="w-100" />
+            <RadzenTextBox Change=@(args => OnChange(args, "TextBox")) Class="w-100" />
+               
         </div>
         <ValidationMessage class="offset-md-3 col-md-8" For="@(() => newChatLine.TimeStamp)" />
 

@@ -247,6 +247,11 @@ namespace TCAPArchive.Api.Models
             return _ctx.ChatSessions.Find(Id);
         }
 
+        public ChatSession GetChatSessionByPredatorId(Guid Id)
+        {
+            return _ctx.ChatSessions.Where(x => x.PredatorId == Id).FirstOrDefault();
+        }
+
         public ChatLine GetChatLineById(Guid Id)
         {
             return _ctx.ChatLines.Find(Id);

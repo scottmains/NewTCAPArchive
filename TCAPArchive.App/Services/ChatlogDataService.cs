@@ -32,6 +32,12 @@ namespace TCAPArchive.App.Services
                 (await _httpClient.GetStreamAsync($"api/chatlog/{chatSessionId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<ChatSession> GetChatSessionByPredatorId(Guid predatorId)
+        {
+            return await JsonSerializer.DeserializeAsync<ChatSession>
+                (await _httpClient.GetStreamAsync($"api/chatlog/predatorid/{predatorId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
         public async Task<ChatLine> GetChatLineById(Guid chatLineId)
         {
             return await JsonSerializer.DeserializeAsync<ChatLine>
