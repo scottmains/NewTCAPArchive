@@ -47,8 +47,6 @@ namespace TCAPArchive.App.Pages
             }
 
             adminChatlines = newChatLines;
-
-
         }
 		}
 
