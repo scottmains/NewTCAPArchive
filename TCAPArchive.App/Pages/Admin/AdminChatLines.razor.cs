@@ -24,13 +24,13 @@ namespace TCAPArchive.App.Pages.Admin
         public Decoy decoy { get; set; }
         public ChatSession chatsession { get; set; }
 
-        public List<AdminEditChatLinesViewModel> adminChatlines { get; set; }
+        public List<ChatLinesViewModel> adminChatlines { get; set; }
 
         override protected async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            var newChatLines = new List<AdminEditChatLinesViewModel>();
+            var newChatLines = new List<ChatLinesViewModel>();
             chatsession = (await ChatlogDataService.GetChatSessionById(ChatSessionId));
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x=> x.Position).ToList();
             predator = (await PredatorDataService.GetPredatorById(chatsession.PredatorId));
@@ -48,7 +48,7 @@ namespace TCAPArchive.App.Pages.Admin
                 {
                     imageData = decoy.ImageData;
                 }
-                var adminChatLine = new AdminEditChatLinesViewModel
+                var adminChatLine = new ChatLinesViewModel
                 {
                     chatLine = chatline,
                     ImageData = imageData

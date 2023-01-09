@@ -7,7 +7,7 @@ using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.Shared.ViewModels
 {
-    public class AdminEditChatLinesViewModel
+    public class ChatLinesViewModel
     {
         public byte[] ImageData { get; set; }
         

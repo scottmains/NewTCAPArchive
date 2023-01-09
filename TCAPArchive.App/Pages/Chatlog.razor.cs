@@ -8,18 +8,26 @@ namespace TCAPArchive.App.Pages
 {
 	public partial class Chatlog
 	{
-		[Inject]
-		public IChatlogDataService ChatlogDataService { get; set; }
+        [Inject]
+        public IChatlogDataService? ChatlogDataService { get; set; }
+        [Inject]
+        public IPredatorDataService? PredatorDataService { get; set; }
+        [Inject]
+        public IDecoyDataService? DecoyDataService { get; set; }
+        [Parameter]
+        public Guid ChatSessionId { get; set; }
 
-		[Parameter]
-		public Guid ChatSessionId { get; set; }
-		public List<ChatLines> Chatlog { get; set; }
+        public List<ChatLine> ChatLines { get; set; }
+        public Predator predator { get; set; }
+        public Decoy decoy { get; set; }
+        public ChatSession chatsession { get; set; }
 
-		protected async override Task OnInitializedAsync()
+        public List<ChatLinesViewModel> chatlines { get; set; }
+        protected async override Task OnInitializedAsync()
 		{
             await base.OnInitializedAsync();
 
-            var newChatLines = new List<AdminEditChatLinesViewModel>();
+            var newChatLines = new List<ChatLinesViewModel>();
             chatsession = (await ChatlogDataService.GetChatSessionById(ChatSessionId));
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x => x.Position).ToList();
             predator = (await PredatorDataService.GetPredatorById(chatsession.PredatorId));
@@ -37,16 +45,16 @@ namespace TCAPArchive.App.Pages
                 {
                     imageData = decoy.ImageData;
                 }
-                var adminChatLine = new AdminEditChatLinesViewModel
+                var chatLine = new ChatLinesViewModel
                 {
                     chatLine = chatline,
                     ImageData = imageData
                 };
 
-                newChatLines.Add(adminChatLine);
+                newChatLines.Add(chatLine);
             }
 
-            adminChatlines = newChatLines;
+            chatlines = newChatLines;
         }
 		}
 
