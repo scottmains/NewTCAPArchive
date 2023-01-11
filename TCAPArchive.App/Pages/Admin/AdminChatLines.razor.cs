@@ -5,6 +5,8 @@ using TCAPArchive.Shared.ViewModels;
 using TCAPArchive.App.Components.Admin.Create;
 using TCAPArchive.App.Components.Admin.Edit;
 using Radzen;
+using Radzen.Blazor;
+using Microsoft.EntityFrameworkCore;
 
 namespace TCAPArchive.App.Pages.Admin
 {
@@ -17,48 +19,85 @@ namespace TCAPArchive.App.Pages.Admin
         [Inject]
         public IDecoyDataService? DecoyDataService { get; set; }
         [Parameter]
-        public Guid ChatSessionId { get; set; }    
+        public Guid ChatSessionId { get; set; }
 
-        public List<ChatLine> ChatLines { get; set; }
-        public Predator predator { get; set; }
-        public Decoy decoy { get; set; }
-        public ChatSession chatsession { get; set; }
+        RadzenDataGrid<ChatLinesViewModel> chatLineGrid;
 
-        public List<ChatLinesViewModel> adminChatlines { get; set; }
+        public List<ChatLine>? ChatLines { get; set; }
+        public Predator? predator { get; set; }
+        public Decoy? decoy { get; set; }
+        public ChatSession? chatsession { get; set; }
+
+        public List<AdminChatLineEditViewModel>? senders { get; set; }
+
+        ChatLine? chatLineToInsert;
+        ChatLine? chatLineToUpdate;
+
+        public List<ChatLinesViewModel>? adminChatlines { get; set; }
 
         override protected async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            var newChatLines = new List<ChatLinesViewModel>();
             chatsession = (await ChatlogDataService.GetChatSessionById(ChatSessionId));
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x=> x.Position).ToList();
             predator = (await PredatorDataService.GetPredatorById(chatsession.PredatorId));
             decoy = (await DecoyDataService.GetDecoyById(chatsession.DecoyId));
 
-            foreach(var chatline in ChatLines)
-            {
-                byte[] imageData = null;
+            var newChatLines = SetUpSender(ChatLines);
+            adminChatlines = newChatLines;
 
-                if(chatline.SenderId == predator.Id)
+            var participantsList = addParticipantsToList(predator, decoy);
+
+            senders = participantsList;
+
+        }
+
+        private List<ChatLinesViewModel> SetUpSender(List<ChatLine> chatLines)
+        {
+            var newChatLines = new List<ChatLinesViewModel>();
+            foreach (var chatline in ChatLines)
+            {
+                var adminChatLine = new ChatLinesViewModel();
+                if (chatline.SenderId == predator.Id)
                 {
-                    imageData = predator.ImageData;
+                  adminChatLine.predator = predator;
                 }
                 else
                 {
-                    imageData = decoy.ImageData;
+                    adminChatLine.decoy = decoy;
                 }
-                var adminChatLine = new ChatLinesViewModel
-                {
-                    chatLine = chatline,
-                    ImageData = imageData
-                };
-
+                adminChatLine.chatLine = chatline;
                 newChatLines.Add(adminChatLine);
             }
 
-            adminChatlines = newChatLines;
+            return newChatLines;
+        }
 
+        private List<AdminChatLineEditViewModel> addParticipantsToList(Predator predator, Decoy decoy)
+        {
+            var addParticipants = new List<AdminChatLineEditViewModel>();
+
+            var predatorSender = new AdminChatLineEditViewModel
+            {
+                senderHandle = predator.Handle,
+                senderId = predator.Id
+            };
+            var decoySender = new AdminChatLineEditViewModel
+            {
+                senderHandle = decoy.Handle,
+                senderId = decoy.Id
+            };
+            addParticipants.Add(predatorSender);
+            addParticipants.Add(decoySender);
+
+            return addParticipants;
+        }
+
+        void Reset()
+        {
+            chatLineToInsert = null;
+            chatLineToUpdate = null;
         }
 
         public async Task RefreshData()
@@ -66,24 +105,43 @@ namespace TCAPArchive.App.Pages.Admin
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x => x.Position).ToList();
         }
 
-
-        public async Task OpenChatLineEdit(Guid chatLineId, string senderHandle)
+        async Task EditRow(ChatLinesViewModel chatline)
         {
-            var result = await DialogService.OpenAsync<ChatLineEdit>($" Edit message by {senderHandle}",
-                   new Dictionary<string, object>() { { "chatLineId", chatLineId } },
-                   new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+            chatLineToUpdate = chatline.chatLine;
+            await chatLineGrid.EditRow(chatline);
 
-            await RefreshData();
-            StateHasChanged();
         }
 
-        public async Task InsertChatLine(Guid ChatLineId)
+        async Task SaveRow(ChatLinesViewModel chatline)
         {
-            var result = await DialogService.OpenAsync<InsertChatLineCreate>($" Create ",
-                    new Dictionary<string, object>() { { "ChatLineId", ChatLineId } },
-                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-            await RefreshData();
+            await chatLineGrid.UpdateRow(chatline);
         }
+
+        void OnUpdateRow(ChatLinesViewModel chatline)
+        {
+            if (chatline.chatLine == chatLineToInsert)
+            {
+                chatLineToInsert = null;
+            }
+
+            chatLineToUpdate = null;
+
+            ChatlogDataService.UpdateChatLine(chatline.chatLine);
+
+        }
+
+        void CancelEdit(ChatLinesViewModel chatline)
+        {
+            if (chatline.chatLine == chatLineToInsert)
+            {
+                chatLineToInsert = null;
+            }
+
+            chatLineToUpdate = null;
+            chatLineGrid.CancelEditRow(chatline);
+
+        }
+     
 
     }
 }

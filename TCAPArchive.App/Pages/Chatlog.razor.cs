@@ -27,36 +27,38 @@ namespace TCAPArchive.App.Pages
 		{
             await base.OnInitializedAsync();
 
-            var newChatLines = new List<ChatLinesViewModel>();
+         
             chatsession = (await ChatlogDataService.GetChatSessionById(ChatSessionId));
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x => x.Position).ToList();
             predator = (await PredatorDataService.GetPredatorById(chatsession.PredatorId));
             decoy = (await DecoyDataService.GetDecoyById(chatsession.DecoyId));
 
+            var newChatLines = SetUpSender(ChatLines);
+            chatlines = newChatLines;
+            chatlines = newChatLines;
+        }
+
+
+        private List<ChatLinesViewModel> SetUpSender(List<ChatLine> chatLines)
+        {
+            var newChatLines = new List<ChatLinesViewModel>();
             foreach (var chatline in ChatLines)
             {
-                byte[] imageData = null;
-
+                var adminChatLine = new ChatLinesViewModel();
                 if (chatline.SenderId == predator.Id)
                 {
-                    imageData = predator.ImageData;
+                    adminChatLine.predator = predator;
                 }
                 else
                 {
-                    imageData = decoy.ImageData;
+                    adminChatLine.decoy = decoy;
                 }
-                var chatLine = new ChatLinesViewModel
-                {
-                    chatLine = chatline,
-                    ImageData = imageData
-                };
-
-                newChatLines.Add(chatLine);
+                newChatLines.Add(adminChatLine);
             }
 
-            chatlines = newChatLines;
+            return newChatLines;
         }
-		}
+    }
 
 
 
