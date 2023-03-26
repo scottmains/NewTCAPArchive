@@ -18,5 +18,10 @@ namespace TCAPArchive.Shared.Domain
 
         public Guid ChatSessionId { get; set; }
         public ChatSession? ChatSession { get; set; }
+
+        public static implicit operator ChatLine(ChatLine v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

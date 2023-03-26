@@ -9,7 +9,8 @@ namespace TCAPArchive.Shared.ViewModels
 {
     public class ChatLinesViewModel
     {
-        public byte[] ImageData { get; set; }
+        public Predator? predator { get; set; }
+        public Decoy? decoy { get; set; }
         
         public ChatLine chatLine { get; set; }
     }

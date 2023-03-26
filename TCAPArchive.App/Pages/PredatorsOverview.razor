@@ -1,0 +1,31 @@
+﻿@page "/predators"
+@using TCAPArchive.Shared.Domain;
+@inject NavigationManager NavigationManager
+<h2> Predators Overview </h2>
+
+<RadzenCard class="mb-3 rz-shadow-2">
+    <RadzenTextBox @oninput=@(args => OnChangeFilter(args.Value.ToString())) Class="w-100" />
+           <RadzenDropDown TValue="Predator" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"  Placeholder="Sting Location"
+                                Data=@StingLocations TextProperty="StingLocation" ValueProperty="StingLocation" Change=@(args => OnChangeFilter(args.ToString())) Class="w-100" >
+                </RadzenDropDown>
+</RadzenCard>
+
+<div class="col-md-12">
+<RadzenDataList Class="col-lg-8 " AllowPaging="true" Data="@(filteredPredators ?? Predators)" TItem="Predator" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <Template Context="predator">
+            <div class="d-flex flex-row p-3">
+                <RadzenImage Class="rounded-circle float-start me-3" Path="@($"data:image/jpeg;base64,{Convert.ToBase64String(predator.ImageData)}")" Style="width: 100px; height: 100px;" />
+                        <div>
+                            <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">Name</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1"><b>@(predator?.FirstName + " " + predator?.LastName)</b></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-3 mb-0">StingLocation</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1"><b>@predator?.StingLocation</b></RadzenText>
+                        </div>
+                    </div>
+            <div class="text-end">
+           
+                <RadzenButton Click="() => NavigateToChatSession(predator.Id)"  Variant="Variant.Text" Text="View log" />
+            </div>
+        </Template>
+    </RadzenDataList>
+</div>
