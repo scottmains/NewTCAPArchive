@@ -1,18 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using TCAPArchive.App.Pages;
-using TCAPArchive.App.Pages.Admin;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
-using TCAPArchive.Shared.ViewModels;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Match = System.Text.RegularExpressions.Match;
 
-namespace TCAPArchive.App.Components.Admin.Create
+namespace TCAPArchive.App.Components.Create
 {
     public partial class ChatSessionCreate
     {

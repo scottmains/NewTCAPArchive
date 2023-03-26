@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
@@ -12,6 +13,7 @@ namespace TCAPArchive.Api.Models
         int InsertChatLine(ChatLine chatLine);
         int AddChatLines(List<ChatLine> chatlines);
         IEnumerable<Predator> GetAllPredators();
+        IEnumerable<Predator> FilterPredators(string? searchQuery, string? stingLocation);
         IEnumerable<ChatSession> GetAllChatSessions();
         IEnumerable<Decoy> GetAllDecoys();
         Predator GetPredatorById(Guid Id);
@@ -26,7 +28,9 @@ namespace TCAPArchive.Api.Models
         int DeletePredator(Guid Id);
         int DeleteDecoy(Guid Id);
         int DeleteChatSession(Guid Id);
+        Task<int> GetTotalChatlines(Guid chatSessionId);
         List<ChatLine> GetAllChatLinesByChatSession(Guid chatSessionId);
+        (List<ChatLine> Data, int Total) FilterChatlines(Guid chatSessionId, int page, int pageSize, string? searchQuery, int? position, string? dropdownQuery);
         bool SaveAll();
 
     }

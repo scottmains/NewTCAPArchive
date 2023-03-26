@@ -2,11 +2,11 @@
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
-using TCAPArchive.App.Components.Admin.Create;
-using TCAPArchive.App.Components.Admin.Edit;
 using Radzen;
+using TCAPArchive.App.Components.Edit;
+using TCAPArchive.App.Components.Create;
 
-namespace TCAPArchive.App.Pages.Admin
+namespace TCAPArchive.App.Pages
 {
     public partial class AdminChatLines
     {

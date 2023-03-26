@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
-using TCAPArchive.App.Components.Admin;
-using TCAPArchive.App.Components.Admin.Create;
-using TCAPArchive.App.Components.Admin.Edit;
+using TCAPArchive.App.Components;
+using TCAPArchive.App.Components.Create;
+using TCAPArchive.App.Components.Edit;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
-namespace TCAPArchive.App.Pages.Admin
+namespace TCAPArchive.App.Pages
 {
     public partial class AdminPredators
     {

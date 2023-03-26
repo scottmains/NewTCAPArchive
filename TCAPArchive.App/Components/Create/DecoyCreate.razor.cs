@@ -5,7 +5,7 @@ using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
-namespace TCAPArchive.App.Components.Admin.Create
+namespace TCAPArchive.App.Components.Create
 {
     public partial class DecoyCreate
     {

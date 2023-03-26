@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using TCAPArchive.Api.Models;
-using TCAPArchive.App.Components.Admin;
+
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
@@ -48,6 +49,32 @@ namespace TCAPArchive.Api.Controllers
             return Ok(_repository.GetAllChatLinesByChatSession(id));
         }
 
+        [HttpGet("chatlines/{id}")]
+        public IActionResult FilterChatlines(Guid id, int pageNumber, int pageSize, string? searchQuery, int? position, string? dropdownQuery)
+        {
+            var result = _repository.FilterChatlines(id, pageNumber, pageSize, searchQuery, position, dropdownQuery);
+            return Ok(new
+            {
+                data = result.Data,
+                total = result.Total
+            });
+        }
+
+        [HttpGet("total")]
+        public IActionResult GetTotalChatlines(Guid chatSessionId)
+        {
+            return Ok(_repository.GetTotalChatlines(chatSessionId));
+        }
+
+        [HttpGet("chatdates/{predatorId}")]
+        public IActionResult GetChatDates(Guid predatorId)
+        {
+            var chatSession = _repository.GetChatSessionByPredatorId(predatorId);
+            var chatLines = _repository.GetAllChatLinesByChatSession(chatSession.Id);
+            var chatDates = chatLines.Select(cl => cl.TimeStamp.Date.ToShortDateString()).Distinct().ToList();
+            return Ok(chatDates);
+        }
+        
         [HttpPost]
 		public ActionResult CreateChatSession([FromBody]ChatSession chatsession)
 		{

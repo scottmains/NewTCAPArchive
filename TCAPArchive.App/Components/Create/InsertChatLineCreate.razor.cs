@@ -8,7 +8,7 @@ using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace TCAPArchive.App.Components.Admin.Create
+namespace TCAPArchive.App.Components.Create
 {
     public partial class InsertChatLineCreate
     {

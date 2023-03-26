@@ -4,7 +4,7 @@ using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
-namespace TCAPArchive.App.Components.Admin.Edit
+namespace TCAPArchive.App.Components.Edit
 {
     public partial class ChatLineEdit
     {

@@ -4,7 +4,7 @@ using Radzen;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
-namespace TCAPArchive.App.Components.Admin.Edit
+namespace TCAPArchive.App.Components.Edit
 {
     public partial class DecoyEdit
     {

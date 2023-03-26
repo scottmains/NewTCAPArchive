@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using TCAPArchive.App.Components.Admin;
+using System.Globalization;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
 
@@ -184,6 +185,36 @@ namespace TCAPArchive.Api.Models
             }
         }
 
+
+        public IEnumerable<Predator> FilterPredators(string? searchQuery, string? stingLocation)
+        {
+            try
+            {
+                _logger.LogInformation("FilterPredators was called");
+                var filteredPredators = _ctx.Predators
+                                        .OrderBy(c => c.Id).ToList();
+
+                if (!string.IsNullOrEmpty(searchQuery))
+                {
+                 filteredPredators = filteredPredators.Where(x => x.FirstName.ToLower().Contains(searchQuery.ToLower()) || x.LastName.ToLower().Contains(searchQuery.ToLower())).ToList();  
+                }
+
+                if (!string.IsNullOrEmpty(stingLocation))
+                {
+                    filteredPredators = filteredPredators.Where(p =>
+                        p.StingLocation.Contains(stingLocation, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+
+                return filteredPredators.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get queries: {ex}");
+                return null;
+            }
+        }
+
         public IEnumerable<Decoy> GetAllDecoys()
         {
             try
@@ -231,6 +262,45 @@ namespace TCAPArchive.Api.Models
                 _logger.LogError($"Failed to get queries: {ex}");
                 return null;
             }
+        }
+
+        public (List<ChatLine> Data, int Total) FilterChatlines(Guid chatSessionId, int page, int pageSize, string? searchQuery, int? position, string? dropdownQuery)
+        {
+            try
+            {
+                _logger.LogInformation("GetAllChatLinesByChatSession was called");
+           
+                    string format = "dd/MM/yyyy";
+                
+                var filteredChatLines = _ctx.ChatLines
+                .Where(x => x.ChatSessionId == chatSessionId
+                        && (!position.HasValue || x.Position >= position)
+                        && (searchQuery == null || x.Message.Contains(searchQuery))
+                        && (dropdownQuery == null || x.TimeStamp.Date == DateTime.ParseExact(dropdownQuery, format, CultureInfo.InvariantCulture)));
+
+                int totalCount = filteredChatLines.Count();
+
+                var chatLines = filteredChatLines
+                    .OrderBy(c => c.Position)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return (chatLines, totalCount);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get queries: {ex}");
+                return (null, 0);
+            }
+        }
+        public async Task<int> GetTotalChatlines(Guid chatSessionId)
+        {
+            int totalChatlines = await _ctx.ChatLines
+                .Where(x => x.ChatSessionId == chatSessionId)
+                .CountAsync();
+
+            return totalChatlines;
         }
 
         public Predator GetPredatorById(Guid Id)

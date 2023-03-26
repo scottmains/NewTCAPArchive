@@ -19,11 +19,24 @@ namespace TCAPArchive.Api.Controllers
             _repository = repository;
         }
         [HttpGet]
-        public IActionResult GetPredators()
+        public IActionResult GetPredators(string? searchQuery, string? stingLocation)
         {
+            if(searchQuery != null || stingLocation != null)
+            {
+                return Ok(_repository.FilterPredators(searchQuery, stingLocation));
+            }
+
             return Ok(_repository.GetAllPredators());
         }
-        
+
+        [HttpGet("stinglocations")]
+        public IActionResult GetStingLocations(string? searchQuery, string? stingLocation)
+        {
+            var predators = _repository.GetAllPredators();
+            var stingLocations = predators.Select(p => p.StingLocation).Distinct().ToList();
+            return Ok(stingLocations);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetPredatorById(Guid id)
         {

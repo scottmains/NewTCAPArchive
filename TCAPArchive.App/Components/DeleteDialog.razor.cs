@@ -3,7 +3,7 @@ using Radzen;
 using TCAPArchive.App.Services;
 using TCAPArchive.Shared.Domain;
 
-namespace TCAPArchive.App.Components.Admin
+namespace TCAPArchive.App.Components
 {
     public partial class DeleteDialog
     {
