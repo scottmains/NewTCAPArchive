@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TCAPArchive.Api.Models;
 using TCAPArchive.Shared.Domain;
@@ -29,7 +30,7 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetDecoyById(id));
         }
-
+        [Authorize]
         [HttpPost]
 		public ActionResult CreateDecoy([FromBody] Decoy decoy)
 		{
@@ -50,7 +51,7 @@ namespace TCAPArchive.Api.Controllers
 			return Created("decoy", createdDecoy);
 
 		}
-
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateDecoy([FromBody] Decoy decoy)
         {
@@ -74,7 +75,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Ok(success); //success
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteDecoy(Guid id)
         {

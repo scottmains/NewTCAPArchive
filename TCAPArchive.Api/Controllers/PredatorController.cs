@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TCAPArchive.Api.Models;
@@ -42,6 +43,8 @@ namespace TCAPArchive.Api.Controllers
         {
             return Ok(_repository.GetPredatorById(id));
         }
+
+        [Authorize]
         [HttpPost]
         public ActionResult CreatePredator([FromBody] Predator predator)
 		{
@@ -61,7 +64,7 @@ namespace TCAPArchive.Api.Controllers
 
 			return Created("predator", createdPredator);
 		}
-
+        [Authorize]
         [HttpPut]
         public IActionResult UpdatePredator([FromBody]Predator predator)
         {
@@ -85,7 +88,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Ok(result); //success
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeletePredator(Guid id)
         {

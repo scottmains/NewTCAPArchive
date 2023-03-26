@@ -1,0 +1,63 @@
+﻿@page "/"
+@layout EmptyLayout
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using TCAPArchive.App.Services
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (showLogin)
+{
+    <div class="col-xl-6 p-3">
+        <RadzenCard class="p-5">
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="mb-4">
+                Remember Me
+            </RadzenText>
+            <RadzenTemplateForm Data=@("LoginWithRemember")>
+                <RadzenLogin AllowResetPassword="false"
+                         AllowRememberMe="true"
+                         Login=@(args => HandleLoginUser(args, "Login with remember"))
+                         Register=@(args => OnRegister("Login with remember")) />
+            </RadzenTemplateForm>
+        </RadzenCard>
+    </div>
+}
+else
+{
+    NavigationManager.NavigateTo("/predators");
+}
+
+@code {
+    private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
+    [Inject]
+    IUserDataService userDataService { get; set; }
+    bool showLogin = true;
+
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        showLogin = !authState.User.Identity.IsAuthenticated;
+    }
+
+    protected async Task HandleLoginUser(LoginArgs args, string name)
+    {
+        var login = new LoginViewModel
+            {
+                Email = args.Username,
+                Password = args.Password,
+                RememberMe = args.RememberMe
+            };
+
+        if (await userDataService.LoginUserAsync(login))
+        {
+            NavigationManager.NavigateTo("/predators", forceLoad: true);
+        }
+    }
+
+    void OnRegister(string name)
+    {
+    }
+}

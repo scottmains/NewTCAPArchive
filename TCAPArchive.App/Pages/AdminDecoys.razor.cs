@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 using System;
 using System.Runtime.InteropServices;
@@ -19,10 +20,10 @@ namespace TCAPArchive.App.Pages
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
-
+        private AuthenticationState authenticationState;
         protected override async Task OnInitializedAsync()
         {
-        
+            authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             Decoys = (await DecoyDataService.GetAllDecoys()).ToList();
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -74,7 +75,7 @@ namespace TCAPArchive.Api.Controllers
             var chatDates = chatLines.Select(cl => cl.TimeStamp.Date.ToShortDateString()).Distinct().ToList();
             return Ok(chatDates);
         }
-        
+        [Authorize]
         [HttpPost]
 		public ActionResult CreateChatSession([FromBody]ChatSession chatsession)
 		{
@@ -94,7 +95,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Created("chatlog", createdChatSession);
         }
-
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateChatSession([FromBody] ChatSession chatsession)
         {
@@ -118,7 +119,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Ok(success); //success
         }
-
+        [Authorize]
         [HttpPut("chatline")]
         public IActionResult UpdateChatLine([FromBody] ChatLine chatLine)
         {
@@ -142,7 +143,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Ok(success); //success
         }
-
+        [Authorize]
         [HttpPost("addchatlines")]
         public ActionResult CreateChatLines([FromBody] List<ChatLine> chatlines)
         {
@@ -156,6 +157,8 @@ namespace TCAPArchive.Api.Controllers
 
             return Created("chatlog", chatLines);
         }
+
+        [Authorize]
         [HttpPost("insertchatline")]
         public ActionResult InsertChatLine([FromBody]ChatLine chatLine)
         {
@@ -169,7 +172,7 @@ namespace TCAPArchive.Api.Controllers
 
             return Ok(success);//success
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteChatSession(Guid id)
         {

@@ -1,9 +1,11 @@
 ﻿@layout AdminLayout
 @page "/decoys"
+@using Microsoft.AspNetCore.Components.Authorization;
 @using TCAPArchive.Shared.Domain
 @inject DialogService DialogService
 @inject NotificationService NotificationService
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
 <div class="col-lg-2 p-3">
     <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenDecoyCreate()" />
 </div>

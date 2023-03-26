@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 using Radzen.Blazor;
 using TCAPArchive.App.Components;
@@ -9,7 +10,7 @@ using TCAPArchive.Shared.Domain;
 
 namespace TCAPArchive.App.Pages
 {
-    public partial class AdminPredators
+    public partial class AdminPredators 
     {
         [Inject]
         public IPredatorDataService? PredatorDataService { get; set; }
@@ -19,10 +20,11 @@ namespace TCAPArchive.App.Pages
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
-      
+
 
         protected override async Task OnInitializedAsync()
         {
+        
             Predators = (await PredatorDataService.GetAllPredators()).ToList();
         }
 
@@ -37,7 +39,16 @@ namespace TCAPArchive.App.Pages
 
         public async Task RefreshData()
         {
+
             Predators = (await PredatorDataService.GetAllPredators()).ToList();
+        }
+
+        private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+        {
+         
+                await RefreshData();
+                StateHasChanged(); // This will cause the component to re-render
+        
         }
 
         public async Task OpenPredatorCreate()
@@ -61,7 +72,9 @@ namespace TCAPArchive.App.Pages
 
         }
 
-        }
+  
+
+    }
 
     }
 

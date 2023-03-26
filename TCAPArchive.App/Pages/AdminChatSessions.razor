@@ -1,11 +1,13 @@
 ﻿@layout AdminLayout
 @page "/chatsessions"
 
+@using Microsoft.AspNetCore.Components.Authorization;
 @using TCAPArchive.Shared.ViewModels;
 @inject DialogService DialogService
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
 <div class="col-lg-2 p-3">
     <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenChatSessionCreate()" />
 </div>

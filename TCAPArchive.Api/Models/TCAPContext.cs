@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using TCAPArchive.Shared.Domain;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TCAPArchive.Api.Models
 {
-    public class TCAPContext : DbContext
+    public class TCAPContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public TCAPContext(DbContextOptions<TCAPContext> options) : base(options)
         { }
@@ -23,6 +26,7 @@ namespace TCAPArchive.Api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
 
          modelBuilder.Entity<ChatSession>()
         .HasOne(cs => cs.Predator)
