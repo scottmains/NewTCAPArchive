@@ -36,7 +36,7 @@ namespace TCAPArchive.App.Components.Create
                 predator.ImageTitle = file.Name;
                 predator.ImageData = ms.ToArray();
             }
-
+            predator.Id = Guid.NewGuid();
             var addedPredator = await PredatorDataService.AddPredator(predator);
             busy = false;
 

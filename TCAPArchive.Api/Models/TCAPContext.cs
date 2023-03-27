@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using TCAPArchive.Shared.Domain;
-using Microsoft.AspNet.Identity.EntityFramework;
+
 
 namespace TCAPArchive.Api.Models
 {

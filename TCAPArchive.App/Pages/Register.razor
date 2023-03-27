@@ -1,45 +1,37 @@
-﻿@using TCAPArchive.App.Services;
-@page "/register"
+﻿@page "/register"
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Text.Json
 
+<h3>Register</h3>
 
-<h3>RegisterForm</h3>
-
-<EditForm Model="@RegisterViewModel" OnValidSubmit="@HandleRegisterUser">
+<EditForm Model="@registerModel" OnValidSubmit="(e) => HandleRegister(registerModel)">
+    >
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <InputText id="Email" class="form-control" @bind-Value="@RegisterViewModel.Email" />
-    </div>
+    <InputText id="email" @bind-Value="@registerModel.Email" placeholder="Email" />
+    <InputText id="password" type="password" @bind-Value="@registerModel.Password" placeholder="Password" />
 
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <InputText id="Password" type="password" class="form-control" @bind-Value="@RegisterViewModel.Password" />
-    </div>
-
-    <div class="form-group">
-        <label for="ConfirmPassword">Confirm Password:</label>
-        <InputText id="ConfirmPassword" type="password" class="form-control" @bind-Value="@RegisterViewModel.ConfirmPassword" />
-    </div>
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Register</button>
-    </div>
+    <button type="submit">Register</button>
 </EditForm>
 
-<div class="mt-3">
-    <p>Already have an account? <a href="/">Log in here</a>.</p>
-</div>
 
 @code {
-    private RegisterViewModel RegisterViewModel { get; set; } = new RegisterViewModel();
 
-    [Inject]
-    IUserDataService userDataService { get; set; }
+    private RegisterViewModel registerModel = new RegisterViewModel();
 
-    protected async Task HandleRegisterUser()
+    public async Task<bool> HandleRegister(RegisterViewModel model)
     {
-        await userDataService.CreateUserAsync(RegisterViewModel);
+        var response = await HttpClient.PostAsJsonAsync("/api/account/register", model);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // User was successfully registered
+            return true;
+        }
+
+        // Registration failed
+        return false;
     }
 }

@@ -3,16 +3,20 @@ using System.Text.Json;
 using System.Text;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Net.Http.Json;
 
 namespace TCAPArchive.App.Services
 {
     public class UserDataService : IUserDataService
     {
         private readonly HttpClient _httpClient;
-
-        public UserDataService(HttpClient httpClient)
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        public UserDataService(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider)
         {
             _httpClient = httpClient;
+            _authenticationStateProvider = authenticationStateProvider;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public async Task<ApplicationUser> CreateUserAsync(RegisterViewModel user)
         {
@@ -29,19 +33,32 @@ namespace TCAPArchive.App.Services
             return null;
         }
 
-        public async Task<bool> LoginUserAsync(LoginViewModel user)
+        public async Task<bool> LoginAsync(LoginViewModel model)
         {
-            var userJson =
-                new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsJsonAsync("api/account/login", model);
 
-            var response = await _httpClient.PostAsync("/api/Account/login", userJson);
+            if (response.IsSuccessStatusCode)
+            {
+                // Set the authentication cookie in the browser
+                await _authenticationStateProvider.GetAuthenticationStateAsync();
 
-            return response.IsSuccessStatusCode;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        public async Task<bool> LogoutUserAsync()
+
+        public async Task LogoutAsync()
         {
-            var response = await _httpClient.PostAsync("/api/Account/logout", null);
-            return response.IsSuccessStatusCode;
+            var response = await _httpClient.PostAsync("api/account/logout", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Remove the authentication cookie from the browser
+                await _authenticationStateProvider.GetAuthenticationStateAsync();
+            }
         }
     }
 }

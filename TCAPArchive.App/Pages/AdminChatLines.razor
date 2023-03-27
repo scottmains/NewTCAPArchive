@@ -1,12 +1,12 @@
 ﻿@page "/chatlines/{ChatSessionId:guid}"
 @using Microsoft.AspNetCore.Components.Authorization;
-@layout AdminLayout
+@layout MainLayout
 @inject DialogService DialogService
 @inject NotificationService NotificationService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
-<RadzenDataGrid @ref="chatLineGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" EditMode="DataGridEditMode.Single"
+<RadzenDataGrid @ref="chatLineGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="50" AllowSorting="true" EditMode="DataGridEditMode.Single"
                 Data="@adminChatlines" TItem="ChatLinesViewModel" RowUpdate="@OnUpdateRow"  Sort="@Reset" Page="@Reset" Filter="@Reset">
     <Columns>
         

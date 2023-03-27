@@ -9,7 +9,7 @@ namespace TCAPArchive.App.Services
     {
     Task<ApplicationUser> CreateUserAsync(RegisterViewModel user);
 
-    Task<bool> LoginUserAsync(LoginViewModel user);
-    Task<bool> LogoutUserAsync();
+    Task<bool> LoginAsync(LoginViewModel user);
+    Task LogoutAsync();
     }
 }

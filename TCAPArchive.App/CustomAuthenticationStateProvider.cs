@@ -1,48 +1,55 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Net.Http.Json;
-using System.Security.Claims;
-using TCAPArchive.Shared.Domain;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 
 namespace TCAPArchive.App
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly HttpClient _httpClient;
-        private NavigationManager _navigationManager;
-        public CustomAuthenticationStateProvider(HttpClient httpClient, NavigationManager navigationManager)
+        private readonly ILocalStorageService _localStorage;
+
+        public CustomAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorage)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://localhost:7039/");
-            _navigationManager = navigationManager;
+            _localStorage = localStorage;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var response = await _httpClient.GetAsync("api/Account/getcurrentuser");
+            var authToken = await _localStorage.GetItemAsStringAsync("authToken");
 
-            if (response.IsSuccessStatusCode && response.Content.Headers.ContentType.MediaType == "application/json")
+            if (!string.IsNullOrEmpty(authToken))
             {
-                var user = await response.Content.ReadFromJsonAsync<ApplicationUser>();
-
-                if (user != null)
-                {
-                    var claims = new[]
-                    {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
-                };
-
-                    var identity = new ClaimsIdentity(claims, "apiauth");
-                    var principal = new ClaimsPrincipal(identity);
-                    return new AuthenticationState(principal);
-                }
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(authToken);
+                var claimsIdentity = new ClaimsIdentity(jwtToken.Claims, "jwt");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                return new AuthenticationState(claimsPrincipal);
             }
-            _navigationManager.NavigateTo("/");
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            else
+            {
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            }
         }
 
-
+        public async Task SetAuthenticationStateAsync(string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                await _localStorage.SetItemAsStringAsync("authToken", token);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+                var claimsIdentity = new ClaimsIdentity(jwtToken.Claims, "jwt");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                var authState = new AuthenticationState(claimsPrincipal);
+                NotifyAuthenticationStateChanged(Task.FromResult(authState));
+            }
+        }
     }
 }

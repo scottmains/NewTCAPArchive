@@ -15,13 +15,19 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddHttpClient<IUserDataService, UserDataService>(client =>
 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+});
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
+builder.Services.AddHttpContextAccessor();
 
+// Add the custom AuthenticationStateProvider
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddHttpClient<IPredatorDataService, PredatorDataService>(client =>
 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 

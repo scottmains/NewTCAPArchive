@@ -2,26 +2,30 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
-
 
 [Route("api/[controller]")]
 [ApiController]
 public class AccountController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
 
-
-    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+    public AccountController(UserManager<ApplicationUser> userManager, IMapper mapper, IConfiguration configuration)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
         _mapper = mapper;
+        _configuration = configuration;
     }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -29,12 +33,10 @@ public class AccountController : Controller
         {
             return BadRequest(ModelState);
         }
-
         var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            await _signInManager.SignInAsync(user, isPersistent: true);
             return Ok();
         }
         else
@@ -50,7 +52,6 @@ public class AccountController : Controller
         {
             return BadRequest(ModelState);
         }
-
         var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user == null)
@@ -58,17 +59,55 @@ public class AccountController : Controller
             return NotFound();
         }
 
-        var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, true, false);
+        var result = await _userManager.CheckPasswordAsync(user, model.Password);
 
-        if (result.Succeeded)
+        if (result)
         {
-            return Ok();
+            var token = GenerateJwtToken(user);
+            return Ok(new { Token = token });
         }
         else
         {
             return Unauthorized();
         }
     }
+    private string GenerateJwtToken(ApplicationUser user)
+    {
+        var header = new JwtHeader(new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                SecurityAlgorithms.HmacSha256)
+            );
+
+        var claims = new List<Claim>
+{
+    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+};
+
+        var expireDays = Convert.ToDouble(_configuration["Jwt:ExpireDays"] ?? "7");
+        var now = DateTime.UtcNow;
+        var unixTimestampNow = new DateTimeOffset(now).ToUnixTimeSeconds();
+        var unixTimestampExp = new DateTimeOffset(now.AddDays(expireDays)).ToUnixTimeSeconds();
+
+        var payload = new JwtPayload
+{
+    {"iss", _configuration["Jwt:Issuer"]},
+    {"aud", _configuration["Jwt:Audience"]},
+    {"exp", unixTimestampExp},
+    {"iat", unixTimestampNow},
+    {"nbf", unixTimestampNow},
+    {"unique_name", user.UserName}
+};
+
+        payload.AddClaims(claims);
+
+        var token = new JwtSecurityToken(header, payload);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+
 
     [Authorize]
     [HttpGet("getcurrentuser")]
@@ -79,18 +118,6 @@ public class AccountController : Controller
         {
             return BadRequest("No user claims found.");
         }
-
-        var claims = await _userManager.GetClaimsAsync(user);
-        var identity = new ClaimsIdentity(claims, "apiauth");
-        var principal = new ClaimsPrincipal(identity);
-
         return Ok(user);
-    }
-
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
-    {
-        await _signInManager.SignOutAsync();
-        return Ok();
     }
 }

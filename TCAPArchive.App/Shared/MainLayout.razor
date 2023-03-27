@@ -1,19 +1,68 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using Radzen.Blazor
+@using System.Security.Claims;
+@using TCAPArchive.App.Services;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inherits LayoutComponentBase
 <RadzenDialog />
 <RadzenNotification />
 <RadzenContextMenu />
 <RadzenTooltip />
 
-<RadzenLayout class="rz-color-black">
-    <RadzenHeader>
-    <NavMenu/>
- </RadzenHeader>
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
 
-  <RadzenBody class="container">
-        @Body
- </RadzenBody>
- <RadzenFooter>
-        Footer
- </RadzenFooter>
+<RadzenLayout class="rz-shadow-3">
+    <RadzenHeader>
+        <div class="d-flex align-items-center">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+          
+        </div>
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Path="/predators" Text="Predators" Icon="home" />
+            <RadzenPanelMenuItem Path="/decoys" Text="Decoys" Icon="account_box" />
+            <RadzenPanelMenuItem Path="/chatsessions" Text="Chat Sessions" Icon="account_box"/>
+                    </RadzenPanelMenu>
+        <div class="p-2">
+
+        </div>
+    </RadzenSidebar>
+    <RadzenBody>
+        <AuthorizeView>
+            <Authorized>
+                @Body
+            </Authorized>
+            <NotAuthorized>
+              <h3>You are not authorized to view this page. Please log in.</h3>
+            </NotAuthorized>
+        </AuthorizeView>
+    </RadzenBody>
 </RadzenLayout>
+
+@code {
+    bool sidebar1Expanded = true;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateTask;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/predators");
+        }
+        else
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+    private async Task HandleLogout()
+    {
+        await localStorageService.ClearAsync();
+        Navigation.NavigateTo("/login");
+    }
+}

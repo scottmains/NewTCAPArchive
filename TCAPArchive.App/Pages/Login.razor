@@ -1,63 +1,56 @@
-﻿@page "/"
+﻿@page "/login"
 @layout EmptyLayout
-
+@using System.Security.Claims
+@using Blazored.LocalStorage;
 @using Microsoft.AspNetCore.Components.Authorization
-@using TCAPArchive.App.Services
+@using System.Text.Json;
 
-@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
 
-@if (showLogin)
-{
-    <div class="col-xl-6 p-3">
-        <RadzenCard class="p-5">
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="mb-4">
-                Remember Me
-            </RadzenText>
-            <RadzenTemplateForm Data=@("LoginWithRemember")>
-                <RadzenLogin AllowResetPassword="false"
-                         AllowRememberMe="true"
-                         Login=@(args => HandleLoginUser(args, "Login with remember"))
-                         Register=@(args => OnRegister("Login with remember")) />
-            </RadzenTemplateForm>
-        </RadzenCard>
+<h1>Login</h1>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="loginModel.Email" />
     </div>
-}
-else
-{
-    NavigationManager.NavigateTo("/predators");
-}
+    <div>
+        <label for="password">Password:</label>
+        <InputText id="password" @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <button type="submit">Login</button>
+</EditForm>
 
 @code {
-    private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
-    [Inject]
-    IUserDataService userDataService { get; set; }
-    bool showLogin = true;
+    private LoginViewModel loginModel = new LoginViewModel();
 
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    private async Task HandleValidSubmit()
     {
-        var authState = await authenticationStateTask;
-        showLogin = !authState.User.Identity.IsAuthenticated;
-    }
-
-    protected async Task HandleLoginUser(LoginArgs args, string name)
-    {
-        var login = new LoginViewModel
-            {
-                Email = args.Username,
-                Password = args.Password,
-                RememberMe = args.RememberMe
-            };
-
-        if (await userDataService.LoginUserAsync(login))
+        try
         {
-            NavigationManager.NavigateTo("/predators", forceLoad: true);
-        }
-    }
+            var response = await HttpClient.PostAsJsonAsync("/api/account/login", loginModel);
+            response.EnsureSuccessStatusCode();
 
-    void OnRegister(string name)
-    {
+            // Deserialize the response
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Raw JSON response: {jsonResponse}"); // Log the raw JSON response
+            var jsonDocument = JsonDocument.Parse(jsonResponse);
+            var token = jsonDocument.RootElement.GetProperty("token").GetString();
+
+            await LocalStorage.SetItemAsStringAsync("authToken", token);
+
+            NavigationManager.NavigateTo("/predators");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

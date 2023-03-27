@@ -43,7 +43,7 @@ namespace TCAPArchive.App.Components.Create
                 decoy.ImageTitle = file.Name;
                 decoy.ImageData = ms.ToArray();
             }
-
+            decoy.Id = Guid.NewGuid();
             var addedDecoy = await DecoyDataService.AddDecoy(decoy);
             busy = false;
             if (addedDecoy != null)

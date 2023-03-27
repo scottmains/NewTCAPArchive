@@ -18,7 +18,7 @@ namespace TCAPArchive.Api.Controllers
 		{
 			_repository = repository;
 		}
-
+        [Authorize]
         [HttpGet]
         public IActionResult GetDecoys()
         {
@@ -31,7 +31,7 @@ namespace TCAPArchive.Api.Controllers
             return Ok(_repository.GetDecoyById(id));
         }
         [Authorize]
-        [HttpPost]
+        [HttpPost("adddecoy")]
 		public ActionResult CreateDecoy([FromBody] Decoy decoy)
 		{
 			

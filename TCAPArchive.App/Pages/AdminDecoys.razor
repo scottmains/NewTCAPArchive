@@ -1,4 +1,4 @@
-﻿@layout AdminLayout
+﻿@layout MainLayout
 @page "/decoys"
 @using Microsoft.AspNetCore.Components.Authorization;
 @using TCAPArchive.Shared.Domain
@@ -10,7 +10,7 @@
     <RadzenButton Text=@($"Create") Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click="() => OpenDecoyCreate()" />
 </div>
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true"
-                FilterMode="FilterMode.Simple" PageSize="5" AllowPaging="true" AllowSorting="true" Data="@Decoys" TItem="Decoy" ColumnWidth="300px"
+                FilterMode="FilterMode.Simple" PageSize="20" AllowPaging="true" AllowSorting="true" Data="@Decoys" TItem="Decoy" ColumnWidth="300px"
                 FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>

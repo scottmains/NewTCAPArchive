@@ -2,6 +2,8 @@
 using System.Text;
 using TCAPArchive.Shared.Domain;
 using TCAPArchive.Shared.ViewModels;
+using Blazored.LocalStorage;
+using System.Net.Http.Headers;
 
 namespace TCAPArchive.App.Services
 {
@@ -9,10 +11,20 @@ namespace TCAPArchive.App.Services
 	{
 
         private readonly HttpClient _httpClient;
-
-        public ChatlogDataService(HttpClient httpClient)
+        private readonly ILocalStorageService _localStorageService;
+        public ChatlogDataService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             _httpClient = httpClient;
+            _localStorageService = localStorageService;
+        }
+
+        private async Task SetAuthorizationHeaderAsync()
+        {
+            var token = await _localStorageService.GetItemAsync<string>("authToken");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
         }
         public async Task<IEnumerable<ChatSession>> GetAllChatSessions()
         {
@@ -46,7 +58,7 @@ namespace TCAPArchive.App.Services
 
         public async Task<int> UpdateChatSession(ChatSession chatsession)
         {
-            
+            await SetAuthorizationHeaderAsync();
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
 
@@ -62,7 +74,7 @@ namespace TCAPArchive.App.Services
 
         public async Task<int> UpdateChatLine(ChatLine chatLine)
         {
-
+            await SetAuthorizationHeaderAsync();
             var chatLineJson =
                 new StringContent(JsonSerializer.Serialize(chatLine), Encoding.UTF8, "application/json");
 
@@ -78,6 +90,7 @@ namespace TCAPArchive.App.Services
 
         public async Task<ChatSession> AddChatSession(ChatSession chatsession)
         {
+            await SetAuthorizationHeaderAsync();
             var chatSessionJson =
                 new StringContent(JsonSerializer.Serialize(chatsession), Encoding.UTF8, "application/json");
 
@@ -92,6 +105,7 @@ namespace TCAPArchive.App.Services
 
         public async Task<int> AddChatLines(List<ChatLine> chatlines )
         {
+            await SetAuthorizationHeaderAsync();
             var chatLinesJson =
                 new StringContent(JsonSerializer.Serialize(chatlines), Encoding.UTF8, "application/json");
 
@@ -107,6 +121,7 @@ namespace TCAPArchive.App.Services
 
         public async Task<int> InsertChatLine(ChatLine chatLine)
         {
+            await SetAuthorizationHeaderAsync();
             var chatLinesJson =
                new StringContent(JsonSerializer.Serialize(chatLine), Encoding.UTF8, "application/json");
 
@@ -123,7 +138,8 @@ namespace TCAPArchive.App.Services
 
         public async Task<int> DeleteChatSession(Guid chatSessionId)
         {
-          var response =  await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
+            await SetAuthorizationHeaderAsync();
+            var response =  await _httpClient.DeleteAsync($"api/chatlog/{chatSessionId}");
             if (response.IsSuccessStatusCode)
             {
                 return await JsonSerializer.DeserializeAsync<int>(await response.Content.ReadAsStreamAsync());
