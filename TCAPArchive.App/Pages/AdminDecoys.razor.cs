@@ -20,22 +20,15 @@ namespace TCAPArchive.App.Pages
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
-        private AuthenticationState authenticationState;
         protected override async Task OnInitializedAsync()
         {
-            authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             Decoys = (await DecoyDataService.GetAllDecoys()).ToList();
         }
-
-  
-    
         public async Task OpenDecoyEdit(Guid decoyId, string decoyHandle)
         {
             var result = await DialogService.OpenAsync<DecoyEdit>($" Edit {decoyHandle}",
                    new Dictionary<string, object>() { { "decoyId", decoyId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-
-        
                 await RefreshData();
         }
 
@@ -44,11 +37,7 @@ namespace TCAPArchive.App.Pages
            var result = await DialogService.OpenAsync<DecoyCreate>($" Create ",
                    new Dictionary<string, object>() { },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-
-         
                 await RefreshData();
-            
-       
         }
 
         public async Task RefreshData()

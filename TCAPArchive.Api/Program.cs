@@ -71,7 +71,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<TCAPContext>(options =>
 options.UseSqlServer(
-"Server=tcp:tcaparchivedbserver.database.windows.net,1433;Initial Catalog=TCAPArchive_db;Persist Security Info=False;User ID=smains;Password=Boffgoblin1!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;", o => o.CommandTimeout(180)
+configuration["AZURE_SQL_CONNECTIONSTRING"], o => o.CommandTimeout(180)
 ));
 
 builder.Services.AddScoped<ITCAPRepository, TCAPRepository>();

@@ -20,7 +20,6 @@ namespace TCAPArchive.App.Pages
         [Inject]
         public IPredatorDataService? PredatorDataService { get; set; }
         public List<ChatSession> ChatSessions { get; set; }
-        private AuthenticationState authenticationState;
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
@@ -31,7 +30,6 @@ namespace TCAPArchive.App.Pages
         override protected async Task OnInitializedAsync()
         {
 
-            authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var allChatSessions = new List<AdminChatSessionViewModel>();
 
             ChatSessions = (await ChatlogDataService.GetAllChatSessions()).ToList();

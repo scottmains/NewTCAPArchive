@@ -16,7 +16,7 @@ namespace TCAPArchive.App.Pages
         public IPredatorDataService? PredatorDataService { get; set; }
         public List<Predator> Predators { get; set; }
         public Predator predator { get; set; }
-        private RadzenDataGrid<Predator> DataGridRef { get; set; }
+ 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
         protected bool Saved;
@@ -33,22 +33,12 @@ namespace TCAPArchive.App.Pages
             await DialogService.OpenAsync<PredatorEdit> ($" Edit {predatorName}",
                    new Dictionary<string, object>() { { "predatorId", predatorId } },
                    new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
-
                 await RefreshData();
         }
 
         public async Task RefreshData()
         {
-
             Predators = (await PredatorDataService.GetAllPredators()).ToList();
-        }
-
-        private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
-        {
-         
-                await RefreshData();
-                StateHasChanged(); // This will cause the component to re-render
-        
         }
 
         public async Task OpenPredatorCreate()
@@ -57,8 +47,6 @@ namespace TCAPArchive.App.Pages
             var result = await DialogService.OpenAsync<PredatorCreate>($" Create ",
                    new Dictionary<string, object>() { },
                    new DialogOptions() { Width = "700px", Height = "600px", Resizable = true, Draggable = true, ShowClose = true });
-
-        
                 await RefreshData();
         }
 
