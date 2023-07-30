@@ -269,17 +269,19 @@ namespace TCAPArchive.Api.Models
             try
             {
                 _logger.LogInformation("GetAllChatLinesByChatSession was called");
-           
-                    string format = "dd/MM/yyyy";
-                
+
+                string format = "dd/MM/yyyy";
+
                 var filteredChatLines = _ctx.ChatLines
-                .Where(x => x.ChatSessionId == chatSessionId
-                        && (!position.HasValue || x.Position >= position)
-                        && (searchQuery == null || x.Message.Contains(searchQuery))
-                        && (dropdownQuery == null || x.TimeStamp.Date == DateTime.ParseExact(dropdownQuery, format, CultureInfo.InvariantCulture)));
+                    .Where(x => x.ChatSessionId == chatSessionId
+                            && (searchQuery == null || x.Message.Contains(searchQuery))
+                            && (dropdownQuery == null || x.TimeStamp.Date == DateTime.ParseExact(dropdownQuery, format, CultureInfo.InvariantCulture)));
 
+                if (position.HasValue)
+                {
+                    filteredChatLines = filteredChatLines.Where(x => x.Position >= position);
+                }
                 int totalCount = filteredChatLines.Count();
-
                 var chatLines = filteredChatLines
                     .OrderBy(c => c.Position)
                     .Skip((page - 1) * pageSize)
@@ -294,6 +296,7 @@ namespace TCAPArchive.Api.Models
                 return (null, 0);
             }
         }
+
         public async Task<int> GetTotalChatlines(Guid chatSessionId)
         {
             int totalChatlines = await _ctx.ChatLines

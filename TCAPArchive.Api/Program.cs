@@ -24,8 +24,10 @@ var configurationBuilder = new ConfigurationBuilder()
 IConfiguration configuration = configurationBuilder.Build();
 
 // Add services to the container.
-builder.Services.AddControllers().AddJsonOptions(x =>
-    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -38,7 +40,13 @@ builder.Logging.AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug)
 builder.Services.AddAutoMapper(typeof(TCAPMappingProfile));
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<TCAPContext>()
@@ -89,7 +97,9 @@ else
 {
     app.UseExceptionHandler("/error"); // Add this line
 }
+
 app.UseAuthentication();
+app.UseCors();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
@@ -141,9 +151,10 @@ app.Map("/error", errorApp =>
 app.UseHttpsRedirection();
 
 
-app.UseCors("Open");
+
 
 app.MapFallbackToFile("index.html");
+
 
 app.Run();
 

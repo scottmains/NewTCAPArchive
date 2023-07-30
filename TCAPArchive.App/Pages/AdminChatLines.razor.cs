@@ -22,7 +22,7 @@ namespace TCAPArchive.App.Pages
         public Guid ChatSessionId { get; set; }
 
         RadzenDataGrid<ChatLinesViewModel> chatLineGrid;
-        private AuthenticationState authenticationState;
+
         public List<ChatLine>? ChatLines { get; set; }
         public Predator? predator { get; set; }
         public Decoy? decoy { get; set; }
@@ -38,7 +38,6 @@ namespace TCAPArchive.App.Pages
         override protected async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             chatsession = (await ChatlogDataService.GetChatSessionById(ChatSessionId));
             ChatLines = (await ChatlogDataService.GetAllChatLinesByChatSession(ChatSessionId)).OrderBy(x=> x.Position).ToList();
             predator = (await PredatorDataService.GetPredatorById(chatsession.PredatorId));

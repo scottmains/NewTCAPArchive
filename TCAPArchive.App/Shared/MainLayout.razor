@@ -12,14 +12,18 @@
 
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
-
-<RadzenLayout class="rz-shadow-3">
-    <RadzenHeader>
-        <div class="d-flex align-items-center">
+<RadzenLayout>
+<RadzenHeader>
+    <div class="d-flex align-items-center justify-content-between">
+        <div>
             <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-          
         </div>
-    </RadzenHeader>
+        <div class="ml-4">
+            <RadzenButton Text=@($"Logout") ButtonStyle="ButtonStyle.Secondary" Click="() => HandleLogout()" />
+        </div>
+    </div>
+</RadzenHeader>
+
     <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Path="/predators" Text="Predators" Icon="home" />

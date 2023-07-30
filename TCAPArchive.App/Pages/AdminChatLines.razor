@@ -7,14 +7,14 @@
 @attribute [Authorize]
 
 <RadzenDataGrid @ref="chatLineGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="50" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                Data="@adminChatlines" TItem="ChatLinesViewModel" RowUpdate="@OnUpdateRow"  Sort="@Reset" Page="@Reset" Filter="@Reset">
+                Data="@adminChatlines" TItem="ChatLinesViewModel" RowUpdate="@OnUpdateRow" Sort="@Reset" Page="@Reset" Filter="@Reset">
     <Columns>
-        
+
         <RadzenDataGridColumn TItem="ChatLinesViewModel" Property="chatLine.Position" Title="Position" Width="50px">
-           <EditTemplate Context="chatline">
-                    <input class="form-control" id="position" @bind="@chatline.chatLine.Position"></input>
-                    <RadzenRequiredValidator Text="Position is required" Component="chatLine.Position" Popup="true" />
-                </EditTemplate>
+            <EditTemplate Context="chatline">
+                <input class="form-control" id="position" @bind="@chatline.chatLine.Position"></input>
+                <RadzenRequiredValidator Text="Position is required" Component="chatLine.Position" Popup="true" />
+            </EditTemplate>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ChatLinesViewModel" Title="Sender" Sortable="false" Filterable="false" Width="150px">
@@ -23,7 +23,9 @@
                 {
                     <RadzenImage class="rz-gravatar" Path="@($"data:image/jpeg;base64,{Convert.ToBase64String(data.predator.ImageData)}")" />
                     @data.predator.Handle
-                }else{
+                }
+                else
+                {
                     <RadzenImage class="rz-gravatar" Path="@($"data:image/jpeg;base64,{Convert.ToBase64String(data.decoy.ImageData)}")" />
                     @data.decoy.Handle
                 }
@@ -32,30 +34,30 @@
                 <RadzenDropDown @bind-Value="data.chatLine.SenderId" Data="@senders" TextProperty="SenderHandle" ValueProperty="SenderId" Style="width:100%; display: block;" />
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ChatLinesViewModel" Property="chatLine.Message" Title="Message" Width="300px" >
+        <RadzenDataGridColumn TItem="ChatLinesViewModel" Property="chatLine.Message" Title="Message" Width="300px">
             <EditTemplate Context="chatline">
                 <RadzenTextBox @bind-Value="chatline.chatLine.Message" Style="width:100%; display: block; white-space:pre-wrap" Name="chatLine.Message" />
                 <RadzenRequiredValidator Text="Message is required" Component="chatLine.Message" Popup="true" />
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ChatLinesViewModel" Property="chatLine.TimeStamp" Title="Time Sent" Width="200px" >
-        <EditTemplate Context="chatline">
-                <input class="form-control"type="datetime" id="timestamp" @bind="@chatline.chatLine.TimeStamp" ></input>
+        <RadzenDataGridColumn TItem="ChatLinesViewModel" Property="chatLine.TimeStamp" Title="Time Sent" Width="200px">
+            <EditTemplate Context="chatline">
+                <input class="form-control" type="datetime" id="timestamp" @bind="@chatline.chatLine.TimeStamp"></input>
                 <RadzenRequiredValidator Text="Message is required" Component="chatLine.Message" Popup="true" />
             </EditTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="ChatLinesViewModel" Context="chatline" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
-              <Template Context="chatline">
-                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(chatline))" @onclick:stopPropagation="true">
+            <Template Context="chatline">
+                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(chatline))" @onclick:stopPropagation="true">
                 </RadzenButton>
-                </Template>
-                <EditTemplate Context="chatline">
-                    <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(chatline))">
-                    </RadzenButton>
-                    <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@((args) => CancelEdit(chatline))">
-                    </RadzenButton>
-                </EditTemplate>
-            </RadzenDataGridColumn>
-  
+            </Template>
+            <EditTemplate Context="chatline">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(chatline))">
+                </RadzenButton>
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@((args) => CancelEdit(chatline))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
     </Columns>
 </RadzenDataGrid>
